@@ -30,6 +30,7 @@ public class EditorService {
         }
 
         usuario.setStatusEditor(StatusEditor.PENDENTE);
+        usuarioRepository.save(usuario);
     }
 
     public List<Usuario> listarPendentes(){
