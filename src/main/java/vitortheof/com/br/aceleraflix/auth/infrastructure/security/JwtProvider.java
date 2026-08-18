@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import vitortheof.com.br.aceleraflix.auth.domain.Usuario;
 
@@ -13,10 +14,13 @@ import java.util.UUID;
 @Component
 public class JwtProvider {
 
+    @Value("${jwt.secret}")
     private String secret;
 
+    @Value("${jwt.expiration-access}")
     private long expirationAcess;
 
+    @Value("${jwt.expiration-refresh}")
     private long expirationRefresh;
 
     private static final String ISSUER = "aceleraflix";

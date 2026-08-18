@@ -15,8 +15,6 @@ import vitortheof.com.br.aceleraflix.auth.domain.Usuario;
 import vitortheof.com.br.aceleraflix.auth.infrastructure.UsuarioRepository;
 import vitortheof.com.br.aceleraflix.auth.infrastructure.security.JwtProvider;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
