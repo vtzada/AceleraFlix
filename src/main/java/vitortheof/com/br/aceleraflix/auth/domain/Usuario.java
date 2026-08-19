@@ -3,7 +3,6 @@ package vitortheof.com.br.aceleraflix.auth.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 

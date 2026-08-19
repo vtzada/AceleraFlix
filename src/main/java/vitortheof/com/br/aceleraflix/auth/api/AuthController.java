@@ -5,6 +5,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +16,9 @@ import vitortheof.com.br.aceleraflix.auth.application.AuthService;
 import vitortheof.com.br.aceleraflix.auth.application.dto.LoginRequest;
 import vitortheof.com.br.aceleraflix.auth.application.dto.RegisterRequest;
 import vitortheof.com.br.aceleraflix.auth.application.dto.TokenResponse;
+import vitortheof.com.br.aceleraflix.auth.application.dto.UserMeDTO;
 import vitortheof.com.br.aceleraflix.auth.domain.Usuario;
+import vitortheof.com.br.aceleraflix.auth.infrastructure.security.UserAuth;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,6 +37,19 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
         TokenResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserMeDTO> me(@AuthenticationPrincipal UserAuth userAuth) {
+        Usuario usuario = userAuth.getUsuario();
+        UserMeDTO response = new UserMeDTO(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                usuario.getRole(),
+                usuario.getStatusEditor());
         return ResponseEntity.ok(response);
     }
 }
