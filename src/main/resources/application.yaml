@@ -39,6 +39,10 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
-YouTube:
+youtube:
   api:
     key: ${YOUTUBE_API_KEY}
+    shorts:
+      canais: ${YOUTUBE_SHORTS_CANAIS:@filipedeschamps,@rocketseat,@codigofontetv,@LucasMontano,@devfiasco}
+      keywords: ${YOUTUBE_SHORTS_KEYWORDS:programação,programar,dev,developer,código,software,javascript,typescript,python,java,react,node,backend,frontend,fullstack,devops,docker,kubernetes,linux,sql,banco de dados,database,api,git,github,cloud,aws,azure,ia,chatgpt,gpt,openai,deepseek,machine learning,cybersecurity,segurança,framework,web,mobile,flutter,react native,html,css,testes,carreira,vaga,tecnologia,tech,startup,google,microsoft,apple,android,iphone,tesla,hardware,chrome,browser,app,dados,entrevista}
+      max-por-canal: ${YOUTUBE_SHORTS_MAX_POR_CANAL:50}

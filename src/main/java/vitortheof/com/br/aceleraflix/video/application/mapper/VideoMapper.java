@@ -20,7 +20,9 @@ public class VideoMapper {
     private final UserLookupService userLookupService;
 
     public VideoResponse toResponse(Video video) {
-        CategoriaDTO categoria = categoriaLookupService.findById(video.getCategoriaId());
+        CategoriaDTO categoria = video.getCategoriaId() != null
+                ? categoriaLookupService.findById(video.getCategoriaId())
+                : null;
         UserDTO criador = userLookupService.findById(video.getCriadoPor());
         List<String> tags = video.getTags().stream()
                 .map(Tag::getNome)
@@ -33,6 +35,8 @@ public class VideoMapper {
                 video.getDescricao(),
                 video.getUrlEmbed(),
                 video.getThumbnailUrl(),
+                video.getDuracaoSegundos(),
+                video.isEsShort(),
                 categoria,
                 criador,
                 video.getStatus(),

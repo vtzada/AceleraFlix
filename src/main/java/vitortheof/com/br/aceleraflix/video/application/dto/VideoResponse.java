@@ -14,6 +14,8 @@ public record VideoResponse(
         String descricao,
         String urlEmbed,
         String thumbnailUrl,
+        Integer duracaoSegundos,
+        boolean esShort,
         CategoriaDTO categoria,
         UserDTO criador,
         StatusVideo status,

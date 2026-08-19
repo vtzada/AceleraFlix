@@ -1,0 +1,2 @@
+ALTER TABLE video
+    ALTER COLUMN categoria_id DROP NOT NULL;

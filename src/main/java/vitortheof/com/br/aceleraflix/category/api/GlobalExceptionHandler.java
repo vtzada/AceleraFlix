@@ -1,4 +1,4 @@
-package vitortheof.com.br.aceleraflix.auth.application.exception;
+package vitortheof.com.br.aceleraflix.category.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -6,9 +6,15 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import vitortheof.com.br.aceleraflix.auth.application.exception.CredentialsInvalidException;
+import vitortheof.com.br.aceleraflix.auth.application.exception.EmailAlreadyExistsException;
+import vitortheof.com.br.aceleraflix.auth.application.exception.SolicitationInvalidException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryAlreadyExistsException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryNotFoundException;
-import vitortheof.com.br.aceleraflix.video.application.exception.CategoryCategoryNonExistentException;
+import vitortheof.com.br.aceleraflix.category.application.exception.CategoryWithVideoException;
+import vitortheof.com.br.aceleraflix.shared.exception.AccessDeniedException;
+import vitortheof.com.br.aceleraflix.video.application.exception.CategoriaObrigatoriaException;
+import vitortheof.com.br.aceleraflix.video.application.exception.CategoryNonExistentException;
 import vitortheof.com.br.aceleraflix.video.application.exception.UrlInvalidException;
 import vitortheof.com.br.aceleraflix.video.application.exception.VideoNotFoundException;
 import vitortheof.com.br.aceleraflix.video.infrastructure.youtube.YoutubeApiException;
@@ -64,14 +70,29 @@ public class GlobalExceptionHandler {
         return construirResposta(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-    @ExceptionHandler(CategoryCategoryNonExistentException.class)
-    public ResponseEntity<ErroResponse> handleCategoriaInexistente(CategoryCategoryNonExistentException ex) {
+    @ExceptionHandler(CategoryNonExistentException.class)
+    public ResponseEntity<ErroResponse> handleCategoriaInexistente(CategoryNonExistentException ex) {
+        return construirResposta(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(CategoriaObrigatoriaException.class)
+    public ResponseEntity<ErroResponse> handleCategoriaObrigatoria(CategoriaObrigatoriaException ex) {
         return construirResposta(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(YoutubeApiException.class)
     public ResponseEntity<ErroResponse> handleYoutubeApi(YoutubeApiException ex) {
         return construirResposta(HttpStatus.BAD_GATEWAY, "Não foi possível validar o vídeo no momento. Tente novamente.");
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErroResponse> handleAcessoNegado(AccessDeniedException ex) {
+        return construirResposta(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
+    @ExceptionHandler(CategoryWithVideoException.class)
+    public ResponseEntity<ErroResponse> handleCategoriaComVideos(CategoryWithVideoException ex) {
+        return construirResposta(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     private ResponseEntity<ErroResponse> construirResposta(HttpStatus status, String mensagem) {

@@ -1,15 +1,18 @@
 package vitortheof.com.br.aceleraflix.category.application;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vitortheof.com.br.aceleraflix.category.application.dto.CategoriaRequest;
 import vitortheof.com.br.aceleraflix.category.application.dto.CategoriaResponse;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryAlreadyExistsException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryNotFoundException;
+import vitortheof.com.br.aceleraflix.category.application.exception.CategoryWithVideoException;
 import vitortheof.com.br.aceleraflix.category.application.mapper.CategoriaMapper;
 import vitortheof.com.br.aceleraflix.category.domain.Categoria;
 import vitortheof.com.br.aceleraflix.category.infrastructure.CategoriaRepository;
+import vitortheof.com.br.aceleraflix.shared.exception.AccessDeniedException;
 
 import java.text.Normalizer;
 import java.util.List;
@@ -56,6 +59,41 @@ public class CategoriaService {
         return categoriaMapper.toResponse(categoria);
     }
 
+    public CategoriaResponse update(UUID id, CategoriaRequest request, UUID usuarioId, boolean isAdmin) {
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(id));
+
+        verificarPerm(categoria.getCriadoPor(), usuarioId, isAdmin);
+
+        String novoSlug = gerarSlug(request.nome());
+
+        if (!novoSlug.equals(categoria.getSlug()) && categoriaRepository.existsBySlug(novoSlug)) {
+            throw new CategoryAlreadyExistsException(request.nome());
+        }
+
+        categoria.setNome(request.nome());
+        categoria.setSlug(novoSlug);
+        categoria.setDescricao(request.descricao());
+
+        categoriaRepository.save(categoria);
+
+        return categoriaMapper.toResponse(categoria);
+    }
+
+    public void delete(UUID id, UUID usuarioId, boolean isAdmin) {
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(id));
+
+        verificarPerm(categoria.getCriadoPor(), usuarioId, isAdmin);
+
+        try {
+            categoriaRepository.delete(categoria);
+            categoriaRepository.flush();
+        } catch (DataIntegrityViolationException e) {
+            throw new CategoryWithVideoException();
+        }
+    }
+
     private String gerarSlug(String slug){
         String semAcento = Normalizer.normalize(slug, Normalizer.Form.NFD)
                 .replaceAll("\\p{M}", "");
@@ -63,5 +101,11 @@ public class CategoriaService {
                 .matcher(semAcento.toLowerCase())
                 .replaceAll("-")
                 .replaceAll("^-|-$", "");
+    }
+
+    public void verificarPerm(UUID criadoPor, UUID usuarioId, boolean isAdmin) {
+        if (!isAdmin && !criadoPor.equals(usuarioId)) {
+            throw new AccessDeniedException("Você não tem permissão para modificar esta categoria");
+        }
     }
 }
