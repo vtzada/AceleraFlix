@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.UUID;
 
 public record VideoUpdateRequest(
-        @NotBlank(message = "TA-tulo Ac obrigatA3ria")
-        @Size(max = 160, message = "TA-tulo deve ter no mA�x. 160 caracteres.")
+        @NotBlank(message = "Título é obrigatório")
+        @Size(max = 160, message = "Título é obrigatório deve ter no máx. 160 caracteres.")
         String titulo,
-        @Size(max = 2000, message = "DescricA�o deve ter no mA�x. 2000 caracteres.")
+        @Size(max = 2000, message = "Descrição deve ter no máx. 2000 caracteres.")
         String descricao,
         UUID categoriaId,
         List<String> tags
