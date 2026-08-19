@@ -38,3 +38,7 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+YouTube:
+  api:
+    key: ${YOUTUBE_API_KEY}
