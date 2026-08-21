@@ -2,11 +2,12 @@ package vitortheof.com.br.aceleraflix.video.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vitortheof.com.br.aceleraflix.category.application.CategoriaLookupService;
-import vitortheof.com.br.aceleraflix.shared.exception.AccessDeniedException;
+import vitortheof.com.br.aceleraflix.shared.utils.PermissionChecker;
 import vitortheof.com.br.aceleraflix.video.application.dto.VideoRequest;
 import vitortheof.com.br.aceleraflix.video.application.dto.VideoResponse;
 import vitortheof.com.br.aceleraflix.video.application.dto.VideoUpdateRequest;
@@ -32,28 +33,23 @@ import java.util.UUID;
 @Service
 public class VideoService {
 
-    private static final int MAX_SHORT_SEGUNDOS = 180;
-
     private final VideoRepository videoRepository;
     private final CategoriaLookupService categoriaLookupService;
     private final YoutubeClient youtubeClient;
     private final TagResolver tagResolver;
     private final VideoMapper videoMapper;
+    private final PermissionChecker permissionChecker;
 
+    @Transactional
     public VideoResponse create(VideoRequest request, UUID criadoPor) {
         String videoId = YoutubeUrlParser.extrairVideoId(request.urlYoutube())
-                .orElseThrow(() -> new UrlInvalidException("URL do YouTube inválida:" + request.urlYoutube()));
-YoutubeVideoMetadata metadata = youtubeClient.buscarMetadata(videoId)
-                .orElseThrow(() -> new UrlInvalidException("VA-deo do YouTube nA�o encontrada ou indisponA-vel"));
+                .orElseThrow(() -> new UrlInvalidException("URL do YouTube inválida: " + request.urlYoutube()));
+        YoutubeVideoMetadata metadata = youtubeClient.buscarMetadata(videoId)
+                .orElseThrow(() -> new UrlInvalidException("Video do YouTube não encontrado ou indisponível."));
 
         Integer duracaoSegundos = metadata.duracaoSegundos();
-        boolean esShort = isShort(request.urlYoutube(), duracaoSegundos);
 
-        if (request.categoriaId() == null && !esShort) {
-            throw new CategoriaObrigatoriaException();
-        }
-
-        if (request.categoriaId() != null && !categoriaLookupService.existsById(request.categoriaId())) {
+        if (!categoriaLookupService.existsById(request.categoriaId())) {
             throw new CategoryNonExistentException(request.categoriaId());
         }
 
@@ -67,7 +63,6 @@ YoutubeVideoMetadata metadata = youtubeClient.buscarMetadata(videoId)
                 .plataforma(Plataforma.YOUTUBE)
                 .thumbnailUrl(metadata.thumbnailUrl())
                 .duracaoSegundos(duracaoSegundos)
-                .esShort(esShort)
                 .categoriaId(request.categoriaId())
                 .criadoPor(criadoPor)
                 .status(StatusVideo.APROVADO)
@@ -77,38 +72,34 @@ YoutubeVideoMetadata metadata = youtubeClient.buscarMetadata(videoId)
         return videoMapper.toResponse(video);
     }
 
-    private boolean isShort(String urlYoutube, Integer duracaoSegundos) {
-        boolean urlDeShort = urlYoutube != null && urlYoutube.contains("/shorts/");
-        boolean curto = duracaoSegundos != null && duracaoSegundos <= MAX_SHORT_SEGUNDOS;
-        return urlDeShort || curto;
-    }
-
     @Transactional(readOnly = true)
     public Page<VideoResponse> findAll(Pageable pageable) {
-        return videoRepository.findAll(pageable).map(videoMapper::toResponse);
+        Page<Video> page = videoRepository.findAll(pageable);
+        List<VideoResponse> content = videoMapper.toResponseList(page.getContent());
+        return new PageImpl<>(content, pageable, page.getTotalElements());
     }
 
     @Transactional(readOnly = true)
     public Page<VideoResponse> findByCategory(UUID categoriaId, Pageable pageable) {
-        return videoRepository.findByCategoriaId(categoriaId, pageable).map(videoMapper::toResponse);
+        Page<Video> page = videoRepository.findByCategoriaId(categoriaId, pageable);
+        List<VideoResponse> content = videoMapper.toResponseList(page.getContent());
+        return new PageImpl<>(content, pageable, page.getTotalElements());
     }
 
     @Transactional(readOnly = true)
     public Page<VideoResponse> findByCreator(UUID criadoPor, Pageable pageable) {
-        return videoRepository.findByCriadoPor(criadoPor, pageable).map(videoMapper::toResponse);
+        Page<Video> page = videoRepository.findByCriadoPor(criadoPor, pageable);
+        List<VideoResponse> content = videoMapper.toResponseList(page.getContent());
+        return new PageImpl<>(content, pageable, page.getTotalElements());
     }
 
     @Transactional(readOnly = true)
     public Page<VideoResponse> search(String q, Pageable pageable) {
-        return videoRepository
+        Page<Video> page = videoRepository
                 .findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCaseOrTags_NomeContainingIgnoreCase(
-                        q, q, q, pageable)
-                .map(videoMapper::toResponse);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<VideoResponse> findShorts(Pageable pageable) {
-        return videoRepository.findByEsShortTrue(pageable).map(videoMapper::toResponse);
+                        q, q, q, pageable);
+        List<VideoResponse> content = videoMapper.toResponseList(page.getContent());
+        return new PageImpl<>(content, pageable, page.getTotalElements());
     }
 
     @Transactional(readOnly = true)
@@ -123,14 +114,13 @@ YoutubeVideoMetadata metadata = youtubeClient.buscarMetadata(videoId)
         Video video = videoRepository.findById(id)
                 .orElseThrow(() -> new VideoNotFoundException(id));
 
-        verificarPerm(video.getCriadoPor(), usuarioId, isAdmin);
+        permissionChecker.verificarPerm(video.getCriadoPor(), usuarioId, isAdmin);
 
-        boolean esShort = video.isEsShort();
-        if (request.categoriaId() == null && !esShort) {
+        if (request.categoriaId() == null) {
             throw new CategoriaObrigatoriaException();
         }
 
-        if (request.categoriaId() != null && !categoriaLookupService.existsById(request.categoriaId())) {
+        if (!categoriaLookupService.existsById(request.categoriaId())) {
             throw new CategoryNonExistentException(request.categoriaId());
         }
 
@@ -138,11 +128,10 @@ YoutubeVideoMetadata metadata = youtubeClient.buscarMetadata(videoId)
 
         video.setTitulo(request.titulo());
         video.setDescricao(request.descricao());
-        video.setCategoriaId(esShort ? null : request.categoriaId());
+        video.setCategoriaId(request.categoriaId());
         video.setTags(tags);
 
         videoRepository.save(video);
-
         return videoMapper.toResponse(video);
     }
 
@@ -151,15 +140,7 @@ YoutubeVideoMetadata metadata = youtubeClient.buscarMetadata(videoId)
         Video video = videoRepository.findById(id)
                 .orElseThrow(() -> new VideoNotFoundException(id));
 
-        verificarPerm(video.getCriadoPor(), usuarioId, isAdmin);
-
+        permissionChecker.verificarPerm(video.getCriadoPor(), usuarioId, isAdmin);
         videoRepository.delete(video);
     }
-
-    private void verificarPerm(UUID criadoPor, UUID usuarioId, boolean isAdmin) {
-        if (!isAdmin && !criadoPor.equals(usuarioId)) {
-            throw new AccessDeniedException("Você não tem permissão para modificar este vídeo");
-        }
-    }
-
 }

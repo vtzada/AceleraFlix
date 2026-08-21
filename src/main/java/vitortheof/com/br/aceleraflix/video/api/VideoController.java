@@ -14,9 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vitortheof.com.br.aceleraflix.auth.domain.RoleUsuario;
 import vitortheof.com.br.aceleraflix.auth.infrastructure.security.UserAuth;
-import vitortheof.com.br.aceleraflix.video.application.ShortsGarimpoService;
 import vitortheof.com.br.aceleraflix.video.application.VideoService;
-import vitortheof.com.br.aceleraflix.video.application.dto.ShortsGarimpoResult;
 import vitortheof.com.br.aceleraflix.video.application.dto.VideoRequest;
 import vitortheof.com.br.aceleraflix.video.application.dto.VideoResponse;
 import vitortheof.com.br.aceleraflix.video.application.dto.VideoUpdateRequest;
@@ -31,7 +29,6 @@ import java.util.UUID;
 public class VideoController {
 
     private final VideoService videoService;
-    private final ShortsGarimpoService shortsGarimpoService;
 
     @GetMapping
     public ResponseEntity<Page<VideoResponse>> listar(
@@ -59,21 +56,6 @@ public class VideoController {
             @PathVariable UUID categoriaId,
             @PageableDefault(size = 20, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(videoService.findByCategory(categoriaId, pageable));
-    }
-
-    @GetMapping("/shorts")
-    public ResponseEntity<Page<VideoResponse>> listarShorts(
-            @PageableDefault(size = 20, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(videoService.findShorts(pageable));
-    }
-
-    @PostMapping("/shorts/garimpar")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ShortsGarimpoResult> garimparShorts(
-            @AuthenticationPrincipal UserAuth usuarioAutenticado) {
-
-        UUID adminId = usuarioAutenticado.getUsuario().getId();
-        return ResponseEntity.ok(shortsGarimpoService.garimpar(adminId));
     }
 
     @PostMapping

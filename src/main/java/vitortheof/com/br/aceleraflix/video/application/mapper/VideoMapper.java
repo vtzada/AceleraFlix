@@ -11,6 +11,11 @@ import vitortheof.com.br.aceleraflix.video.domain.Tag;
 import vitortheof.com.br.aceleraflix.video.domain.Video;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
@@ -24,6 +29,42 @@ public class VideoMapper {
                 ? categoriaLookupService.findById(video.getCategoriaId())
                 : null;
         UserDTO criador = userLookupService.findById(video.getCriadoPor());
+
+        return buildResponse(video, categoria, criador);
+    }
+
+    public List<VideoResponse> toResponseList(List<Video> videos) {
+        if (videos == null || videos.isEmpty()) {
+            return List.of();
+        }
+
+        Set<UUID> categoriaIds = videos.stream()
+                .map(Video::getCategoriaId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        Set<UUID> criadorIds = videos.stream()
+                .map(Video::getCriadoPor)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        // 2. Buscar no banco em lote (Apenas 2 queries para a página toda!)
+        Map<UUID, CategoriaDTO> categoriasMap = categoriaLookupService.findAllById(categoriaIds);
+        Map<UUID, UserDTO> criadoresMap = userLookupService.findAllById(criadorIds);
+
+        // 3. Montar as respostas consultando os Maps em memória (O(1))
+        return videos.stream().map(video -> {
+            CategoriaDTO categoria = video.getCategoriaId() != null
+                    ? categoriasMap.get(video.getCategoriaId())
+                    : null;
+
+            UserDTO criador = criadoresMap.get(video.getCriadoPor());
+
+            return buildResponse(video, categoria, criador);
+        }).toList();
+    }
+
+    private VideoResponse buildResponse(Video video, CategoriaDTO categoria, UserDTO criador) {
         List<String> tags = video.getTags().stream()
                 .map(Tag::getNome)
                 .sorted()
@@ -36,7 +77,6 @@ public class VideoMapper {
                 video.getUrlEmbed(),
                 video.getThumbnailUrl(),
                 video.getDuracaoSegundos(),
-                video.isEsShort(),
                 categoria,
                 criador,
                 video.getStatus(),
@@ -44,5 +84,4 @@ public class VideoMapper {
                 video.getCriadoEm()
         );
     }
-
 }

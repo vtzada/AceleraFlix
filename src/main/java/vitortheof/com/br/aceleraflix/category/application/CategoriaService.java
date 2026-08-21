@@ -12,7 +12,7 @@ import vitortheof.com.br.aceleraflix.category.application.exception.CategoryWith
 import vitortheof.com.br.aceleraflix.category.application.mapper.CategoriaMapper;
 import vitortheof.com.br.aceleraflix.category.domain.Categoria;
 import vitortheof.com.br.aceleraflix.category.infrastructure.CategoriaRepository;
-import vitortheof.com.br.aceleraflix.shared.exception.AccessDeniedException;
+import vitortheof.com.br.aceleraflix.shared.utils.PermissionChecker;
 
 import java.text.Normalizer;
 import java.util.List;
@@ -25,6 +25,7 @@ public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
     private final CategoriaMapper categoriaMapper;
+    private final PermissionChecker permissionChecker;
 
     @Transactional
     public CategoriaResponse create(CategoriaRequest request, UUID criadoPor) {
@@ -63,7 +64,7 @@ public class CategoriaService {
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
-        verificarPerm(categoria.getCriadoPor(), usuarioId, isAdmin);
+        permissionChecker.verificarPerm(categoria.getCriadoPor(), usuarioId, isAdmin);
 
         String novoSlug = gerarSlug(request.nome());
 
@@ -84,7 +85,7 @@ public class CategoriaService {
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
-        verificarPerm(categoria.getCriadoPor(), usuarioId, isAdmin);
+        permissionChecker.verificarPerm(categoria.getCriadoPor(), usuarioId, isAdmin);
 
         try {
             categoriaRepository.delete(categoria);
@@ -101,11 +102,5 @@ public class CategoriaService {
                 .matcher(semAcento.toLowerCase())
                 .replaceAll("-")
                 .replaceAll("^-|-$", "");
-    }
-
-    public void verificarPerm(UUID criadoPor, UUID usuarioId, boolean isAdmin) {
-        if (!isAdmin && !criadoPor.equals(usuarioId)) {
-            throw new AccessDeniedException("Você não tem permissão para modificar esta categoria");
-        }
     }
 }

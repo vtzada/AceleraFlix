@@ -44,10 +44,6 @@ public class Video {
     @Column(name = "duracao_segundos")
     private Integer duracaoSegundos;
 
-    @Column(name = "es_short", nullable = false)
-    @Builder.Default
-    private boolean esShort = false;
-
     @Column(name = "categoria_id", nullable = false)
     private UUID categoriaId;
 

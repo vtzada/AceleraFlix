@@ -60,6 +60,7 @@ public class EditorService {
         usuarioRepository.save(usuario);
     }
 
+    @Transactional
     public void revogar(UUID usuarioId){
         Usuario usuario = buscarUser(usuarioId);
         if(usuario.getStatusEditor() != StatusEditor.APROVADO){

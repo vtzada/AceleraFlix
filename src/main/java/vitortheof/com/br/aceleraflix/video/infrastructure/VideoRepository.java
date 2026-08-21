@@ -10,7 +10,6 @@ import java.util.UUID;
 public interface VideoRepository extends JpaRepository<Video, UUID> {
     Page<Video> findByCategoriaId(UUID categoriaId, Pageable pageable);
     Page<Video> findByCriadoPor(UUID criadoPor, Pageable pageable);
-    Page<Video> findByEsShortTrue(Pageable pageable);
     Page<Video> findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCaseOrTags_NomeContainingIgnoreCase(
             String titulo, String descricao, String tagNome, Pageable pageable);
     boolean existsByVideoExternoId(String videoExternoId);

@@ -11,7 +11,7 @@ public class YoutubeUrlParser {
 
     //regex para mapear os formatos comuns do ytb, isola o id de 11 caracteres no gp de captura 1
     private static final Pattern PADRAO = Pattern.compile(
-            "(?:youtube\\.com/(?:watch\\?v=|embed/|shorts/)|youtu\\.be/)([a-zA-Z0-9_-]{11})"
+            "(?:youtube\\.com/(?:watch\\?v=|embed/)|youtu\\.be/)([a-zA-Z0-9_-]{11})"
     );
 
     //extrai o id de um video do ytb

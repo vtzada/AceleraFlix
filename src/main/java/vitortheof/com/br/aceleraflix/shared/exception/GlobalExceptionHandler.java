@@ -1,4 +1,4 @@
-package vitortheof.com.br.aceleraflix.category.api;
+package vitortheof.com.br.aceleraflix.shared.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,6 @@ import vitortheof.com.br.aceleraflix.auth.application.exception.SolicitationInva
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryAlreadyExistsException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryNotFoundException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryWithVideoException;
-import vitortheof.com.br.aceleraflix.shared.exception.AccessDeniedException;
 import vitortheof.com.br.aceleraflix.video.application.exception.CategoriaObrigatoriaException;
 import vitortheof.com.br.aceleraflix.video.application.exception.CategoryNonExistentException;
 import vitortheof.com.br.aceleraflix.video.application.exception.UrlInvalidException;
