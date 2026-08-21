@@ -25,10 +25,11 @@ public class JwtProvider {
 
     private static final String ISSUER = "aceleraflix";
 
-    public String generateAcessToken(Usuario usuario) {
+    public String generateAccessToken(Usuario usuario) {
        return JWT.create()
                .withIssuer(ISSUER)
                .withSubject(usuario.getId().toString())
+               .withClaim("type", "access")
                .withClaim("role", usuario.getRole().name())
                .withClaim("email", usuario.getEmail())
                .withIssuedAt(Instant.now())
@@ -40,15 +41,17 @@ public class JwtProvider {
         return JWT.create()
                 .withIssuer(ISSUER)
                 .withSubject(usuario.getId().toString())
+                .withClaim("type", "refresh")
                 .withIssuedAt(Instant.now())
                 .withExpiresAt(Instant.now().plusMillis(expirationRefresh))
                 .sign(Algorithm.HMAC256(secret));
     }
 
-    public UUID validarTokenERetornarUsuarioId(String token) {
+    public UUID validarTokenERetornarUsuarioId(String token, String expectedType) {
         try {
             DecodedJWT decoded = JWT.require(Algorithm.HMAC256(secret))
                     .withIssuer(ISSUER)
+                    .withClaim("type", expectedType)
                     .build()
                     .verify(token);
             return UUID.fromString(decoded.getSubject());

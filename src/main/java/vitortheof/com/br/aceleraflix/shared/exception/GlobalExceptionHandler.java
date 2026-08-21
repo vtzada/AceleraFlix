@@ -1,7 +1,9 @@
 package vitortheof.com.br.aceleraflix.shared.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import vitortheof.com.br.aceleraflix.auth.application.exception.CredentialsInvalidException;
 import vitortheof.com.br.aceleraflix.auth.application.exception.EmailAlreadyExistsException;
 import vitortheof.com.br.aceleraflix.auth.application.exception.SolicitationInvalidException;
+import vitortheof.com.br.aceleraflix.auth.infrastructure.security.TokenInvalidoException; // <-- NOVO IMPORT AQUI
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryAlreadyExistsException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryNotFoundException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryWithVideoException;
@@ -22,8 +25,14 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(TokenInvalidoException.class)
+    public ResponseEntity<ErroResponse> handleTokenInvalido(TokenInvalidoException ex) {
+        return construirResposta(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErroResponse> handleEmailJaCadastrado(EmailAlreadyExistsException ex) {
@@ -33,6 +42,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CredentialsInvalidException.class)
     public ResponseEntity<ErroResponse> handleCredenciaisInvalidas(CredentialsInvalidException ex) {
         return construirResposta(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErroResponse> handleAcessoNegado(AccessDeniedException ex) {
+        return construirResposta(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
     @ExceptionHandler(SolicitationInvalidException.class)
@@ -59,6 +73,16 @@ public class GlobalExceptionHandler {
         return construirResposta(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(CategoryNonExistentException.class)
+    public ResponseEntity<ErroResponse> handleCategoriaInexistente(CategoryNonExistentException ex) {
+        return construirResposta(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(CategoryWithVideoException.class)
+    public ResponseEntity<ErroResponse> handleCategoriaComVideos(CategoryWithVideoException ex) {
+        return construirResposta(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
     @ExceptionHandler(UrlInvalidException.class)
     public ResponseEntity<ErroResponse> handleUrlInvalida(UrlInvalidException ex) {
         return construirResposta(HttpStatus.BAD_REQUEST, ex.getMessage());
@@ -67,11 +91,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(VideoNotFoundException.class)
     public ResponseEntity<ErroResponse> handleVideoNaoEncontrado(VideoNotFoundException ex) {
         return construirResposta(HttpStatus.NOT_FOUND, ex.getMessage());
-    }
-
-    @ExceptionHandler(CategoryNonExistentException.class)
-    public ResponseEntity<ErroResponse> handleCategoriaInexistente(CategoryNonExistentException ex) {
-        return construirResposta(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(CategoriaObrigatoriaException.class)
@@ -84,14 +103,10 @@ public class GlobalExceptionHandler {
         return construirResposta(HttpStatus.BAD_GATEWAY, "Não foi possível validar o vídeo no momento. Tente novamente.");
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErroResponse> handleAcessoNegado(AccessDeniedException ex) {
-        return construirResposta(HttpStatus.FORBIDDEN, ex.getMessage());
-    }
-
-    @ExceptionHandler(CategoryWithVideoException.class)
-    public ResponseEntity<ErroResponse> handleCategoriaComVideos(CategoryWithVideoException ex) {
-        return construirResposta(HttpStatus.CONFLICT, ex.getMessage());
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErroResponse> handleErrosNaoTratados(Exception ex) {
+        log.error("Erro interno não tratado capturado pelo fallback: ", ex);
+        return construirResposta(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno no servidor. Tente novamente mais tarde.");
     }
 
     private ResponseEntity<ErroResponse> construirResposta(HttpStatus status, String mensagem) {
@@ -101,4 +116,3 @@ public class GlobalExceptionHandler {
 
     public record ErroResponse(int status, String mensagem, Instant timestamp) {}
 }
-

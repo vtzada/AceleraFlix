@@ -38,7 +38,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
 
         try {
-            UUID usuarioId = jwtProvider.validarTokenERetornarUsuarioId(token);
+            UUID usuarioId = jwtProvider.validarTokenERetornarUsuarioId(token, "access");
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = customUserDetailsService.loadUserById(usuarioId);

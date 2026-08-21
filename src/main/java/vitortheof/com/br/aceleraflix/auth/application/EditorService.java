@@ -37,6 +37,10 @@ public class EditorService {
         return usuarioRepository.findByStatusEditor(StatusEditor.PENDENTE);
     }
 
+    public List<Usuario> listarAprovados(){
+        return usuarioRepository.findByStatusEditor(StatusEditor.APROVADO);
+    }
+
     @Transactional
     public void aprovar(UUID usuarioId){
         Usuario usuario = buscarUser(usuarioId);

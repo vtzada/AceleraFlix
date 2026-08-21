@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vitortheof.com.br.aceleraflix.auth.application.AuthService;
-import vitortheof.com.br.aceleraflix.auth.application.dto.LoginRequest;
-import vitortheof.com.br.aceleraflix.auth.application.dto.RegisterRequest;
-import vitortheof.com.br.aceleraflix.auth.application.dto.TokenResponse;
-import vitortheof.com.br.aceleraflix.auth.application.dto.UserMeDTO;
+import vitortheof.com.br.aceleraflix.auth.application.dto.*;
 import vitortheof.com.br.aceleraflix.auth.domain.Usuario;
 import vitortheof.com.br.aceleraflix.auth.infrastructure.security.UserAuth;
 
@@ -37,6 +34,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
         TokenResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
+        TokenResponse response = authService.refreshToken(request.refreshToken());
         return ResponseEntity.ok(response);
     }
 

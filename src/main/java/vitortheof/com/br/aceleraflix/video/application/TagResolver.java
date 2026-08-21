@@ -7,6 +7,7 @@ import vitortheof.com.br.aceleraflix.video.infrastructure.TagRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,11 +18,12 @@ public class TagResolver {
     private final TagRepository tagRepository;
 
     public Set<Tag> resolver(List<String> nomesTags) {
-        if (nomesTags.isEmpty()) {
+        if (nomesTags == null || nomesTags.isEmpty()) {
             return new HashSet<>();
         }
 
         return nomesTags.stream()
+                .filter(Objects::nonNull)
                 .map(String::trim)
                 .filter(nome -> !nome.isBlank())
                 .map(String::toLowerCase)

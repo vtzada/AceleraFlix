@@ -44,7 +44,7 @@ public class Video {
     @Column(name = "duracao_segundos")
     private Integer duracaoSegundos;
 
-    @Column(name = "categoria_id", nullable = false)
+    @Column(name = "categoria_id", nullable = true)
     private UUID categoriaId;
 
     @Column(name = "criado_por", nullable = false)

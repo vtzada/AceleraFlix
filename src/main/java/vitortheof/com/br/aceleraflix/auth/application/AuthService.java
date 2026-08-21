@@ -15,6 +15,8 @@ import vitortheof.com.br.aceleraflix.auth.domain.Usuario;
 import vitortheof.com.br.aceleraflix.auth.infrastructure.UsuarioRepository;
 import vitortheof.com.br.aceleraflix.auth.infrastructure.security.JwtProvider;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -53,10 +55,18 @@ public class AuthService {
     }
 
     private TokenResponse generateToken(Usuario usuario) {
-        String accessToken = jwtProvider.generateAcessToken(usuario);
+        String accessToken = jwtProvider.generateAccessToken(usuario);
         String refreshToken = jwtProvider.generateRefreshToken(usuario);
         return new TokenResponse(accessToken, refreshToken);
     }
 
+    @Transactional(readOnly = true)
+    public TokenResponse refreshToken(String refreshToken) {
+        UUID usuarioId = jwtProvider.validarTokenERetornarUsuarioId(refreshToken, "refresh");
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(CredentialsInvalidException::new);
+
+        return generateToken(usuario);
+    }
 
 }

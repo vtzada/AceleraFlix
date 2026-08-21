@@ -31,13 +31,22 @@ public class EditorController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/pendentes")
+    @GetMapping("/pendentes")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserPendenteDTO>> listarPendentes() {
         List<UserPendenteDTO> pendentes = editorService.listarPendentes().stream()
                 .map(u -> new UserPendenteDTO(u.getId(), u.getNome(), u.getEmail(), u.getCriadoEm()))
                 .toList();
         return ResponseEntity.ok(pendentes);
+    }
+
+    @GetMapping("/aprovados")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserPendenteDTO>> listarAprovados() {
+        List<UserPendenteDTO> aprovados = editorService.listarAprovados().stream()
+                .map(u -> new UserPendenteDTO(u.getId(), u.getNome(), u.getEmail(), u.getCriadoEm()))
+                .toList();
+        return ResponseEntity.ok(aprovados);
     }
 
     @PatchMapping("/{usuarioId}/aprovar")
