@@ -60,6 +60,7 @@ public class CategoriaService {
         return categoriaMapper.toResponse(categoria);
     }
 
+    @Transactional
     public CategoriaResponse update(UUID id, CategoriaRequest request, UUID usuarioId, boolean isAdmin) {
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
@@ -81,6 +82,7 @@ public class CategoriaService {
         return categoriaMapper.toResponse(categoria);
     }
 
+    @Transactional
     public void delete(UUID id, UUID usuarioId, boolean isAdmin) {
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
