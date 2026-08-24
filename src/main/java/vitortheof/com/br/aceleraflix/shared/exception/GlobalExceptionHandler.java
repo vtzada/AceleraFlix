@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import vitortheof.com.br.aceleraflix.auth.application.exception.CredentialsInvalidException;
 import vitortheof.com.br.aceleraflix.auth.application.exception.EmailAlreadyExistsException;
 import vitortheof.com.br.aceleraflix.auth.application.exception.SolicitationInvalidException;
-import vitortheof.com.br.aceleraflix.auth.infrastructure.security.TokenInvalidoException; // <-- NOVO IMPORT AQUI
+import vitortheof.com.br.aceleraflix.auth.infrastructure.security.TokenInvalidoException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryAlreadyExistsException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryNotFoundException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryWithVideoException;
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
         return construirResposta(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler(ForbiddenOperationException.class)
     public ResponseEntity<ErroResponse> handleAcessoNegado(AccessDeniedException ex) {
         return construirResposta(HttpStatus.FORBIDDEN, ex.getMessage());
     }

@@ -1,7 +1,7 @@
 package vitortheof.com.br.aceleraflix.shared.utils;
 
 import org.springframework.stereotype.Component;
-import vitortheof.com.br.aceleraflix.shared.exception.AccessDeniedException;
+import vitortheof.com.br.aceleraflix.shared.exception.ForbiddenOperationException;
 
 import java.util.UUID;
 
@@ -10,7 +10,7 @@ public class PermissionChecker {
 
     public void verificarPerm(UUID criadoPor, UUID usuarioId, boolean isAdmin) {
         if (!isAdmin && !criadoPor.equals(usuarioId)) {
-            throw new AccessDeniedException("Você não tem permissão para modificar este vídeo");
+            throw new ForbiddenOperationException("Você não tem permissão para modificar este vídeo");
         }
     }
 }
