@@ -2,7 +2,6 @@ package vitortheof.com.br.aceleraflix.shared.infrastructure;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -20,8 +19,8 @@ public class RateLimitingService {
 
     private Bucket criarBucket(String ip) {
         Bandwidth limite = Bandwidth.builder()
-                .capacity(30)
-                .refillIntervally(30, Duration.ofMinutes(1))
+                .capacity(60)
+                .refillIntervally(60, Duration.ofMinutes(1))
                 .build();
 
         return Bucket.builder()

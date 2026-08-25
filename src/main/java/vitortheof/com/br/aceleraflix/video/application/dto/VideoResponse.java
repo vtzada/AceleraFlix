@@ -1,6 +1,5 @@
 package vitortheof.com.br.aceleraflix.video.application.dto;
 
-import vitortheof.com.br.aceleraflix.auth.application.dto.UserDTO;
 import vitortheof.com.br.aceleraflix.category.application.dto.CategoriaDTO;
 import vitortheof.com.br.aceleraflix.video.domain.StatusVideo;
 
@@ -16,7 +15,7 @@ public record VideoResponse(
         String thumbnailUrl,
         Integer duracaoSegundos,
         CategoriaDTO categoria,
-        UserDTO criador,
+        CriadorDTO criador,
         StatusVideo status,
         List<String> tags,
         Instant criadoEm) {

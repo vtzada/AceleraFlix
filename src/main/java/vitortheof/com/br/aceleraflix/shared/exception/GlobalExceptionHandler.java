@@ -15,6 +15,9 @@ import vitortheof.com.br.aceleraflix.auth.infrastructure.security.TokenInvalidoE
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryAlreadyExistsException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryNotFoundException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryWithVideoException;
+import vitortheof.com.br.aceleraflix.profile.application.exception.ProfileAlreadyExistsException;
+import vitortheof.com.br.aceleraflix.profile.application.exception.ProfileNotFoundException;
+import vitortheof.com.br.aceleraflix.profile.application.exception.UsernameAlreadyExistsException;
 import vitortheof.com.br.aceleraflix.video.application.exception.CategoriaObrigatoriaException;
 import vitortheof.com.br.aceleraflix.video.application.exception.CategoryNonExistentException;
 import vitortheof.com.br.aceleraflix.video.application.exception.UrlInvalidException;
@@ -101,6 +104,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(YoutubeApiException.class)
     public ResponseEntity<ErroResponse> handleYoutubeApi(YoutubeApiException ex) {
         return construirResposta(HttpStatus.BAD_GATEWAY, "Não foi possível validar o vídeo no momento. Tente novamente.");
+    }
+
+    @ExceptionHandler(ProfileAlreadyExistsException.class)
+    public ResponseEntity<ErroResponse> handlePerfilJaExiste(ProfileAlreadyExistsException ex) {
+        return construirResposta(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<ErroResponse> handleUsernameJaUsado(UsernameAlreadyExistsException ex) {
+        return construirResposta(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(ProfileNotFoundException.class)
+    public ResponseEntity<ErroResponse> handlePerfilNaoEncontrado(ProfileNotFoundException ex) {
+        return construirResposta(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
