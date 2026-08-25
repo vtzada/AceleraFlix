@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ForbiddenOperationException.class)
-    public ResponseEntity<ErroResponse> handleAcessoNegado(AccessDeniedException ex) {
+    public ResponseEntity<ErroResponse> handleAcessoNegado(ForbiddenOperationException ex) {
         return construirResposta(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
