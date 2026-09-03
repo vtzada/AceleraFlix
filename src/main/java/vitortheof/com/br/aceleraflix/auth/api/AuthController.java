@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import vitortheof.com.br.aceleraflix.auth.application.AuthService;
 import vitortheof.com.br.aceleraflix.auth.application.dto.*;
 import vitortheof.com.br.aceleraflix.auth.domain.Usuario;
+import vitortheof.com.br.aceleraflix.auth.application.dto.RefreshTokenRequest;
+import vitortheof.com.br.aceleraflix.auth.application.dto.TokenResponse;
 import vitortheof.com.br.aceleraflix.auth.infrastructure.security.UserAuth;
 
 @RestController
