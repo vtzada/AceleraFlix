@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 import java.util.UUID;
 
-@Table(name = "roadmap_topic")
+@Table(name = "roadmap_topics")
 @Entity
 @Getter
 @Setter

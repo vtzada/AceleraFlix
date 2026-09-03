@@ -21,6 +21,7 @@ public class RoadmapResource {
     private String title;
     private Integer orderIndex;
 
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private ResourceType resourceType;
 

@@ -19,7 +19,6 @@ import vitortheof.com.br.aceleraflix.video.application.dto.VideoRequest;
 import vitortheof.com.br.aceleraflix.video.application.dto.VideoResponse;
 import vitortheof.com.br.aceleraflix.video.application.dto.VideoUpdateRequest;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController

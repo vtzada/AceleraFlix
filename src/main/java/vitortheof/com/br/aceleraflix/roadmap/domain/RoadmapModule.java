@@ -7,7 +7,7 @@ import lombok.*;
 import java.util.List;
 import java.util.UUID;
 
-@Table(name = "roadmap_module")
+@Table(name = "roadmap_modules")
 @Entity
 @Getter
 @Setter

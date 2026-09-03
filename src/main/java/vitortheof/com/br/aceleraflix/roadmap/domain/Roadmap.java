@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 import java.util.UUID;
 
-@Table(name = "roadmap")
+@Table(name = "roadmaps")
 @Entity
 @Getter
 @Setter
@@ -14,7 +14,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class Roadmap {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
