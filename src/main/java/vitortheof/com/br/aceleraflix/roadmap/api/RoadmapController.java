@@ -5,10 +5,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vitortheof.com.br.aceleraflix.roadmap.application.RoadmapService;
 import vitortheof.com.br.aceleraflix.roadmap.application.dto.request.RoadmapRequestDTO;
-import vitortheof.com.br.aceleraflix.roadmap.application.dto.response.ModuleDTO;
 import vitortheof.com.br.aceleraflix.roadmap.application.dto.response.RoadmapResponseDTO;
 
 import java.util.List;
@@ -29,18 +29,21 @@ public class RoadmapController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RoadmapResponseDTO> createRoadmap(@Valid @RequestBody RoadmapRequestDTO request) {
         RoadmapResponseDTO response = roadmapService.createRoadmap(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RoadmapResponseDTO> updateRoadmap(@PathVariable UUID id, @RequestBody RoadmapRequestDTO roadmapRequestDTO) {
         RoadmapResponseDTO response = roadmapService.updateRoadmap(id, roadmapRequestDTO);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteRoadmap(@PathVariable UUID id) {
         roadmapService.deleteRoadmap(id);
         return ResponseEntity.noContent().build();

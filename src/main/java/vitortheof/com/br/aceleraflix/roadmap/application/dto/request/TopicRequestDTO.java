@@ -7,5 +7,5 @@ public record TopicRequestDTO(
         @NotBlank(message = "O título é obrigatório.")
         String title,
         @NotNull(message = "A ordem é obrigatória.")
-        String orderIndex) {
+        Integer orderIndex) {
 }

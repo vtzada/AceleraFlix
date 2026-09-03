@@ -37,7 +37,7 @@ public class RoadmapMapper {
         return new ModuleDTO(module.getId(), module.getTitle(), topics);
     }
 
-    private TopicDTO toTopicDTO(RoadmapTopic topic) {
+    public TopicDTO toTopicDTO(RoadmapTopic topic) {
         if (topic == null) return null;
 
         List<ResourceDTO> resources = (topic.getResources() == null) ? Collections.emptyList() :
@@ -46,7 +46,7 @@ public class RoadmapMapper {
         return new TopicDTO(topic.getId(), topic.getTitle(), resources);
     }
 
-    private ResourceDTO toResourceDTO(RoadmapResource resource) {
+    public ResourceDTO toResourceDTO(RoadmapResource resource) {
         if (resource == null) return null;
 
         return new ResourceDTO(
