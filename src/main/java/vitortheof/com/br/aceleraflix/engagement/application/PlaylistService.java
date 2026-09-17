@@ -1,12 +1,12 @@
-package vitortheof.com.br.aceleraflix.library.application;
+package vitortheof.com.br.aceleraflix.engagement.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vitortheof.com.br.aceleraflix.library.domain.Playlist;
-import vitortheof.com.br.aceleraflix.library.domain.PlaylistType;
-import vitortheof.com.br.aceleraflix.library.domain.PlaylistVideo;
-import vitortheof.com.br.aceleraflix.library.repository.PlaylistRepository;
+import vitortheof.com.br.aceleraflix.engagement.domain.Playlist;
+import vitortheof.com.br.aceleraflix.engagement.domain.PlaylistType;
+import vitortheof.com.br.aceleraflix.engagement.domain.PlaylistVideo;
+import vitortheof.com.br.aceleraflix.engagement.infrastructure.PlaylistRepository;
 
 import java.util.UUID;
 

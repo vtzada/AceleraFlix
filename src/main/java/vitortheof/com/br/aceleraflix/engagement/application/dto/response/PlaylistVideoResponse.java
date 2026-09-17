@@ -1,4 +1,4 @@
-package vitortheof.com.br.aceleraflix.library.application.dto.response;
+package vitortheof.com.br.aceleraflix.engagement.application.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

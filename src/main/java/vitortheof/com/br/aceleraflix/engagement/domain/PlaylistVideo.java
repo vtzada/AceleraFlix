@@ -1,4 +1,4 @@
-package vitortheof.com.br.aceleraflix.library.domain;
+package vitortheof.com.br.aceleraflix.engagement.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

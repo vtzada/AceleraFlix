@@ -1,9 +1,9 @@
-package vitortheof.com.br.aceleraflix.library.application.mapper;
+package vitortheof.com.br.aceleraflix.engagement.application.mapper;
 
 import org.springframework.stereotype.Component;
-import vitortheof.com.br.aceleraflix.library.application.dto.response.PlaylistResponseDTO;
-import vitortheof.com.br.aceleraflix.library.application.dto.response.PlaylistVideoResponse;
-import vitortheof.com.br.aceleraflix.library.domain.Playlist;
+import vitortheof.com.br.aceleraflix.engagement.application.dto.response.PlaylistResponseDTO;
+import vitortheof.com.br.aceleraflix.engagement.application.dto.response.PlaylistVideoResponse;
+import vitortheof.com.br.aceleraflix.engagement.domain.Playlist;
 
 @Component
 public class PlaylistMapper {
