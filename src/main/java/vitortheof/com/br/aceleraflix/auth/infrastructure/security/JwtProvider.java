@@ -38,14 +38,39 @@ public class JwtProvider {
     }
 
     public String generateRefreshToken(Usuario usuario) {
+        return generateRefreshToken(usuario, UUID.randomUUID());
+    }
+
+    public String generateRefreshToken(Usuario usuario, UUID jti) {
         return JWT.create()
                 .withIssuer(ISSUER)
                 .withSubject(usuario.getId().toString())
                 .withClaim("type", "refresh")
+                .withClaim("jti", jti.toString())
                 .withIssuedAt(Instant.now())
                 .withExpiresAt(Instant.now().plusMillis(expirationRefresh))
                 .sign(Algorithm.HMAC256(secret));
     }
+
+    public RefreshData validarRefreshToken(String token) {
+        try {
+            DecodedJWT decoded = JWT.require(Algorithm.HMAC256(secret))
+                    .withIssuer(ISSUER)
+                    .withClaim("type", "refresh")
+                    .build()
+                    .verify(token);
+            UUID userId = UUID.fromString(decoded.getSubject());
+            String jtiClaim = decoded.getClaim("jti").asString();
+            if (jtiClaim == null) {
+                throw new TokenInvalidoException("Refresh token sem identificador");
+            }
+            return new RefreshData(userId, UUID.fromString(jtiClaim), decoded.getExpiresAtAsInstant());
+        } catch (JWTVerificationException | IllegalArgumentException e) {
+            throw new TokenInvalidoException("Token inválido ou expirado");
+        }
+    }
+
+    public record RefreshData(UUID userId, UUID jti, Instant expiresAt) {}
 
     public UUID validarTokenERetornarUsuarioId(String token, String expectedType) {
         try {
