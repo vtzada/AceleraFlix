@@ -1,0 +1,149 @@
+{
+  "verificadoEm": "2026-10-10",
+  "fonte": "YouTube Data API v3",
+  "videos": [
+    {
+      "id": "58fdd1a3-973c-4814-a3b4-a655d73b126d",
+      "categoria": "Java",
+      "titulo": "10 - Tipos primitivos pt 01 - convenções de variáveis",
+      "canal": "DevDojo",
+      "urlYoutube": "https://www.youtube.com/watch?v=RRHGYyJTTpQ",
+      "visualizacoes": 84782,
+      "curtidas": 5008,
+      "duracaoSegundos": 699,
+      "idioma": "pt-BR"
+    },
+    {
+      "id": "70f6b75e-4f8b-47de-af33-f8fa8c08a6b4",
+      "categoria": "Java",
+      "titulo": "11 - Tipos primitivos pt 02 - declaração e tamanho em memória",
+      "canal": "DevDojo",
+      "urlYoutube": "https://www.youtube.com/watch?v=veDgI_zZ7uk",
+      "visualizacoes": 64649,
+      "curtidas": 4839,
+      "duracaoSegundos": 768,
+      "idioma": "pt-BR"
+    },
+    {
+      "id": "dbefa903-7145-4f82-9fb3-471dfd62b8fa",
+      "categoria": "Python",
+      "titulo": "Curso Python #10 - Condições (Parte 1)",
+      "canal": "Curso em Vídeo",
+      "urlYoutube": "https://www.youtube.com/watch?v=K10u3XIf1-Q",
+      "visualizacoes": 1151852,
+      "curtidas": 52536,
+      "duracaoSegundos": 2085,
+      "idioma": "pt-BR"
+    },
+    {
+      "id": "6e8a2729-0eda-470e-850c-f185b5633380",
+      "categoria": "Python",
+      "titulo": "Curso Python #013 - Estrutura de repetição for",
+      "canal": "Curso em Vídeo",
+      "urlYoutube": "https://www.youtube.com/watch?v=cL4YDtFnCt4",
+      "visualizacoes": 1112131,
+      "curtidas": 38464,
+      "duracaoSegundos": 2125,
+      "idioma": "pt-BR"
+    },
+    {
+      "id": "d77235fe-ab79-4db4-a76d-34794ee7003f",
+      "categoria": "TypeScript",
+      "titulo": "TypeScript, o início, de forma prática | MasterClass #07",
+      "canal": "Rocketseat",
+      "urlYoutube": "https://www.youtube.com/watch?v=0mYq5LrQN1s",
+      "visualizacoes": 257678,
+      "curtidas": 11509,
+      "duracaoSegundos": 4224,
+      "idioma": "pt-BR"
+    },
+    {
+      "id": "322f68e6-78ad-4665-aa84-36dd4dd7bc94",
+      "categoria": "TypeScript",
+      "titulo": "CURSO DE TYPESCRIPT para INICIANTES | Aprenda Typescript na Prática",
+      "canal": "Fernanda Kipper",
+      "urlYoutube": "https://www.youtube.com/watch?v=QoqDr4H2G8U",
+      "visualizacoes": 35711,
+      "curtidas": 2192,
+      "duracaoSegundos": 2711,
+      "idioma": "pt-BR"
+    },
+    {
+      "id": "48c6e0e9-9c86-43a2-abf4-53ced09044fb",
+      "categoria": "DevOps",
+      "titulo": "Day-01 - 06 - Primeiros passos 01 | Descomplicando o Docker",
+      "canal": "LINUXtips",
+      "urlYoutube": "https://www.youtube.com/watch?v=ms04rvuRyyI",
+      "visualizacoes": 20943,
+      "curtidas": 1050,
+      "duracaoSegundos": 1057,
+      "idioma": "pt-BR"
+    },
+    {
+      "id": "f19ef9ad-a011-40e5-9d60-2331e642eca7",
+      "categoria": "DevOps",
+      "titulo": "O mínimo que você precisa saber sobre Docker!",
+      "canal": "Diolinux",
+      "urlYoutube": "https://www.youtube.com/watch?v=ntbpIfS44Gw",
+      "visualizacoes": 474480,
+      "curtidas": 30169,
+      "duracaoSegundos": 837,
+      "idioma": "pt-BR"
+    },
+    {
+      "id": "c01adb69-038a-416b-ba36-b7d7f8617364",
+      "categoria": "Banco de Dados",
+      "titulo": "Curso MySQL #11 - SELECT (Parte 1)",
+      "canal": "Curso em Vídeo",
+      "urlYoutube": "https://www.youtube.com/watch?v=GaOlyL3Uv9M",
+      "visualizacoes": 465369,
+      "curtidas": 24207,
+      "duracaoSegundos": 2071,
+      "idioma": "pt-BR"
+    },
+    {
+      "id": "c7f800b8-312f-4682-bc48-c15991cb5d2a",
+      "categoria": "Banco de Dados",
+      "titulo": "Curso MySQL #12 - SELECT (Parte 2)",
+      "canal": "Curso em Vídeo",
+      "urlYoutube": "https://www.youtube.com/watch?v=q4hPo83-Buo",
+      "visualizacoes": 345167,
+      "curtidas": 16358,
+      "duracaoSegundos": 2294,
+      "idioma": "pt-BR"
+    },
+    {
+      "id": "bc828b62-5e71-48c3-b2e8-0c6819d2e757",
+      "categoria": "Frontend",
+      "titulo": "Curso de React JS para Iniciantes com Projeto",
+      "canal": "Matheus Battisti - Hora de Codar",
+      "urlYoutube": "https://www.youtube.com/watch?v=ERflhpiMc1o",
+      "visualizacoes": 32475,
+      "curtidas": 1701,
+      "duracaoSegundos": 5459,
+      "idioma": "pt-BR"
+    },
+    {
+      "id": "32aa8d90-c494-4936-b5e0-5728a5e90509",
+      "categoria": "Carreira",
+      "titulo": "5 Hábitos que Todo Programador Júnior Já Deveria Ter",
+      "canal": "Filipe Deschamps",
+      "urlYoutube": "https://www.youtube.com/watch?v=PGxTuv6k0KI",
+      "visualizacoes": 485169,
+      "curtidas": 61704,
+      "duracaoSegundos": 586,
+      "idioma": "pt-BR"
+    },
+    {
+      "id": "f9f19607-efae-4f63-80ed-019dc0f7a2db",
+      "categoria": "Carreira",
+      "titulo": "Minha Rotina Como Programador e Youtuber",
+      "canal": "Filipe Deschamps",
+      "urlYoutube": "https://www.youtube.com/watch?v=NfXaINcqPt8",
+      "visualizacoes": 486504,
+      "curtidas": 43945,
+      "duracaoSegundos": 485,
+      "idioma": "pt-BR"
+    }
+  ]
+}

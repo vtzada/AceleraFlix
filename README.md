@@ -358,3 +358,9 @@ src/
     └── java/vitortheof/com/br/aceleraflix/
         └── AceleraflixApplicationTests.java
 ```
+
+### Limites de requisições
+
+As cotas são independentes por IP: 360 leituras, 120 escritas, 20 tentativas de login/cadastro e 60 renovações de sessão por minuto. Os tokens são repostos gradualmente; navegar não consome a cota de publicação ou autenticação. OPTIONS e o health check não consomem cota. Respostas 429 incluem `Retry-After`, `retryAfterSeconds` e uma mensagem com o tempo de espera. Os valores são configuráveis com `RATE_LIMIT_*_PER_MINUTE`, documentados em `.env.example` e repassados pelo Compose.
+
+`RATE_LIMIT_TRUST_FORWARDED_FOR` permanece desativado por padrão. Em implantação atrás de um proxy, ative-o somente quando o proxy substituir esse cabeçalho e a API não puder ser acessada diretamente. O limitador é local a cada instância da API; implantações com múltiplas réplicas precisam de um armazenamento compartilhado para uma cota global.

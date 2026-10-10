@@ -1,0 +1,172 @@
+[
+  {
+    "titulo": "10 - Tipos primitivos pt 01 - convenções de variáveis",
+    "descricao": "Fundamentos de tipos primitivos e convenções de nomes de variáveis na Maratona Java do DevDojo. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=RRHGYyJTTpQ",
+    "categoriaId": "798e9eaf-1102-443b-9dfd-2a69ce9bca0b",
+    "tags": [
+      "java",
+      "variaveis",
+      "fundamentos",
+      "pt-br",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "11 - Tipos primitivos pt 02 - declaração e tamanho em memória",
+    "descricao": "Continue o estudo de tipos primitivos com declarações e tamanho em memória na Maratona Java do DevDojo. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=veDgI_zZ7uk",
+    "categoriaId": "798e9eaf-1102-443b-9dfd-2a69ce9bca0b",
+    "tags": [
+      "java",
+      "tipos-primitivos",
+      "memoria",
+      "pt-br",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "Curso Python #10 - Condições (Parte 1)",
+    "descricao": "Aprenda a controlar o fluxo dos programas com condições em Python, na aula de Gustavo Guanabara. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=K10u3XIf1-Q",
+    "categoriaId": "8a31738f-f2fa-4b71-b6c0-534d3cf4bf84",
+    "tags": [
+      "python",
+      "condicoes",
+      "iniciante",
+      "pt-br",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "Curso Python #013 - Estrutura de repetição for",
+    "descricao": "Pratique a estrutura de repetição for em Python com os exemplos do Curso em Vídeo. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=cL4YDtFnCt4",
+    "categoriaId": "8a31738f-f2fa-4b71-b6c0-534d3cf4bf84",
+    "tags": [
+      "python",
+      "for",
+      "repeticao",
+      "pt-br",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "TypeScript, o início, de forma prática | MasterClass #07",
+    "descricao": "Primeiros passos com TypeScript em uma aula prática da Rocketseat. Recomendada para quem já conhece JavaScript. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=0mYq5LrQN1s",
+    "categoriaId": "b9bea778-d309-4816-b094-81ea7dba0943",
+    "tags": [
+      "typescript",
+      "tipagem",
+      "javascript",
+      "pt-br",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "CURSO DE TYPESCRIPT para INICIANTES | Aprenda Typescript na Prática",
+    "descricao": "Introdução prática ao TypeScript para iniciantes com Fernanda Kipper. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=QoqDr4H2G8U",
+    "categoriaId": "b9bea778-d309-4816-b094-81ea7dba0943",
+    "tags": [
+      "typescript",
+      "fundamentos",
+      "iniciante",
+      "pt-br",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "Day-01 - 06 - Primeiros passos 01 | Descomplicando o Docker",
+    "descricao": "Primeiros passos com Docker na série Descomplicando o Docker da LINUXtips. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=ms04rvuRyyI",
+    "categoriaId": "65810ec5-d6dd-4bab-8b51-772cee97baa4",
+    "tags": [
+      "docker",
+      "containers",
+      "devops",
+      "pt-br",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "O mínimo que você precisa saber sobre Docker!",
+    "descricao": "Visão introdutória sobre Docker e containers, apresentada pelo Diolinux. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=ntbpIfS44Gw",
+    "categoriaId": "65810ec5-d6dd-4bab-8b51-772cee97baa4",
+    "tags": [
+      "docker",
+      "containers",
+      "fundamentos",
+      "pt-br",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "Curso MySQL #11 - SELECT (Parte 1)",
+    "descricao": "Aprenda consultas SELECT no MySQL com Gustavo Guanabara, na primeira aula dedicada ao tema. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=GaOlyL3Uv9M",
+    "categoriaId": "af764e02-ad0b-4f05-b889-30bf82b974b3",
+    "tags": [
+      "sql",
+      "mysql",
+      "select",
+      "pt-br",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "Curso MySQL #12 - SELECT (Parte 2)",
+    "descricao": "Continue a prática de consultas SELECT em bancos relacionais na segunda parte da aula do Curso em Vídeo. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=q4hPo83-Buo",
+    "categoriaId": "af764e02-ad0b-4f05-b889-30bf82b974b3",
+    "tags": [
+      "sql",
+      "mysql",
+      "consultas",
+      "pt-br",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "Curso de React JS para Iniciantes com Projeto",
+    "descricao": "Curso introdutório de React com projeto, apresentado por Matheus Battisti no Hora de Codar. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=ERflhpiMc1o",
+    "categoriaId": "0d6d1ff2-6df0-4e45-a8c7-6f92bc1b873c",
+    "tags": [
+      "react",
+      "frontend",
+      "projeto",
+      "iniciante",
+      "pt-br",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "5 Hábitos que Todo Programador Júnior Já Deveria Ter",
+    "descricao": "Filipe Deschamps apresenta cinco hábitos para desenvolver desde o início da carreira de programação. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=PGxTuv6k0KI",
+    "categoriaId": "ff6a78c1-c235-4a6d-ba03-087e75e7b868",
+    "tags": [
+      "carreira",
+      "junior",
+      "habitos",
+      "pt-br",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "Minha Rotina Como Programador e Youtuber",
+    "descricao": "Conheça a rotina de trabalho e produção de conteúdo de Filipe Deschamps e reflita sobre organização profissional. Idioma: português do Brasil.",
+    "urlYoutube": "https://www.youtube.com/watch?v=NfXaINcqPt8",
+    "categoriaId": "ff6a78c1-c235-4a6d-ba03-087e75e7b868",
+    "tags": [
+      "carreira",
+      "rotina",
+      "organizacao",
+      "pt-br",
+      "portugues"
+    ]
+  }
+]
