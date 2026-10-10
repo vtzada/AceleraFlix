@@ -293,6 +293,14 @@ docker compose up --build
 - API: `http://localhost:8080` • Health: `/actuator/health`
 - Swagger: `http://localhost:8080/swagger-ui.html`
 
+Para usar o banco do **Neon** em vez do Postgres local, defina `DB_URL` no `.env` com a JDBC URL do Neon (`?sslmode=require`) e suba só a API:
+
+```bash
+docker compose up --build --no-deps api
+```
+
+As migrations do Flyway (incluindo a V13 do `refresh_token`) são aplicadas automaticamente no banco apontado.
+
 ### Com Docker puro
 
 ```bash
