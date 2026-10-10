@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vitortheof.com.br.aceleraflix.roadmap.application.dto.request.ModuleRequestDTO;
 import vitortheof.com.br.aceleraflix.roadmap.application.dto.response.ModuleDTO;
+import vitortheof.com.br.aceleraflix.roadmap.application.exceptions.RoadmapNotFoundException;
 import vitortheof.com.br.aceleraflix.roadmap.application.mapper.RoadmapMapper;
 import vitortheof.com.br.aceleraflix.roadmap.domain.Roadmap;
 import vitortheof.com.br.aceleraflix.roadmap.domain.RoadmapModule;
@@ -24,7 +25,7 @@ public class RoadmapModuleService {
     @Transactional
     public ModuleDTO createModule(UUID roadmapId, ModuleRequestDTO request) {
         Roadmap roadmap = roadmapRepository.findById(roadmapId).
-                orElseThrow(() -> new RuntimeException("Roadmap with id " + roadmapId + " not found"));
+                orElseThrow(() -> new RoadmapNotFoundException("Roadmap não encontrado: " + roadmapId));
 
         RoadmapModule module = RoadmapModule.builder()
                 .title(request.title())
@@ -40,7 +41,7 @@ public class RoadmapModuleService {
     @Transactional
     public ModuleDTO updateModule(UUID moduleId, ModuleRequestDTO request) {
         RoadmapModule module = roadmapModuleRepository.findById(moduleId).
-                orElseThrow(() -> new RuntimeException("Module with id " + moduleId + " not found"));
+                orElseThrow(() -> new RoadmapNotFoundException("Módulo não encontrado: " + moduleId));
 
         module.setTitle(request.title());
         module.setOrderIndex(request.orderIndex());
@@ -51,7 +52,7 @@ public class RoadmapModuleService {
     @Transactional
     public void deleteModule(UUID moduleId) {
         if (!roadmapModuleRepository.existsById(moduleId)) {
-            throw new RuntimeException("Módulo não encontrado: " + moduleId);
+            throw new RoadmapNotFoundException("Módulo não encontrado: " + moduleId);
         }
         roadmapModuleRepository.deleteById(moduleId);
     }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vitortheof.com.br.aceleraflix.roadmap.application.dto.request.ResourceRequestDTO;
 import vitortheof.com.br.aceleraflix.roadmap.application.dto.response.ResourceDTO;
+import vitortheof.com.br.aceleraflix.roadmap.application.exceptions.RoadmapNotFoundException;
 import vitortheof.com.br.aceleraflix.roadmap.application.mapper.RoadmapMapper;
 import vitortheof.com.br.aceleraflix.roadmap.domain.RoadmapResource;
 import vitortheof.com.br.aceleraflix.roadmap.domain.RoadmapTopic;
@@ -24,7 +25,7 @@ public class RoadmapResourceService {
     @Transactional
     public ResourceDTO createResource(UUID topicId, ResourceRequestDTO request) {
         RoadmapTopic topic = topicRepository.findById(topicId)
-                .orElseThrow(() -> new RuntimeException("Topic with id " + topicId + " not found"));
+                .orElseThrow(() -> new RoadmapNotFoundException("Tópico não encontrado: " + topicId));
 
         RoadmapResource resource = RoadmapResource.builder()
                 .title(request.title())
@@ -42,7 +43,7 @@ public class RoadmapResourceService {
     @Transactional
     public ResourceDTO updateResource(UUID resourceId, ResourceRequestDTO request) {
         RoadmapResource resource = resourceRepository.findById(resourceId)
-                .orElseThrow(() -> new RuntimeException("Resource with id " + resourceId + " not found"));
+                .orElseThrow(() -> new RoadmapNotFoundException("Recurso não encontrado: " + resourceId));
 
         resource.setTitle(request.title());
         resource.setResourceType(request.type());
@@ -56,7 +57,7 @@ public class RoadmapResourceService {
     @Transactional
     public void deleteResource(UUID resourceId) {
         if (!resourceRepository.existsById(resourceId)) {
-            throw new RuntimeException("Resource not found: " + resourceId);
+            throw new RoadmapNotFoundException("Recurso não encontrado: " + resourceId);
         }
         resourceRepository.deleteById(resourceId);
     }

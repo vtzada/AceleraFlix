@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vitortheof.com.br.aceleraflix.roadmap.application.dto.request.TopicRequestDTO;
 import vitortheof.com.br.aceleraflix.roadmap.application.dto.response.TopicDTO;
+import vitortheof.com.br.aceleraflix.roadmap.application.exceptions.RoadmapNotFoundException;
 import vitortheof.com.br.aceleraflix.roadmap.application.mapper.RoadmapMapper;
 import vitortheof.com.br.aceleraflix.roadmap.domain.RoadmapModule;
 import vitortheof.com.br.aceleraflix.roadmap.domain.RoadmapTopic;
@@ -25,7 +26,7 @@ public class RoadmapTopicService {
     @Transactional
     public TopicDTO createTopic(UUID moduleId, TopicRequestDTO request) {
         RoadmapModule module = moduleRepository.findById(moduleId)
-                .orElseThrow(() -> new RuntimeException("Module Not Found"));
+                .orElseThrow(() -> new RoadmapNotFoundException("Módulo não encontrado: " + moduleId));
 
         RoadmapTopic topic = RoadmapTopic.builder()
                 .title(request.title())
@@ -41,7 +42,7 @@ public class RoadmapTopicService {
     @Transactional
     public TopicDTO updateTopic(UUID topicId, TopicRequestDTO request) {
         RoadmapTopic topic = topicRepository.findById(topicId)
-                .orElseThrow(() -> new RuntimeException("Topic Not Found"));
+                .orElseThrow(() -> new RoadmapNotFoundException("Tópico não encontrado: " + topicId));
 
         topic.setTitle(request.title());
         topic.setOrderIndex(request.orderIndex());
@@ -52,7 +53,7 @@ public class RoadmapTopicService {
     @Transactional
     public void deleteTopic(UUID topicId) {
         if (!topicRepository.existsById(topicId)) {
-            throw new RuntimeException("Topic not found: " + topicId);
+            throw new RoadmapNotFoundException("Tópico não encontrado: " + topicId);
         }
         topicRepository.deleteById(topicId);
     }
