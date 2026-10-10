@@ -45,6 +45,20 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/logout")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> logout(@Valid @RequestBody RefreshTokenRequest request) {
+        authService.logout(request.refreshToken());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/logout-all")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> logoutAll(@AuthenticationPrincipal UserAuth userAuth) {
+        authService.logoutAll(userAuth.getUsuario().getId());
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserMeDTO> me(@AuthenticationPrincipal UserAuth userAuth) {

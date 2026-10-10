@@ -281,9 +281,19 @@ cd aceleraflix
 
 A aplicação sobe por padrão em `http://localhost:8080`. As migrations do Flyway são aplicadas automaticamente contra o banco configurado em `DB_URL`.
 
-### Com Docker
+### Com Docker Compose (recomendado p/ local)
 
-O projeto possui um `Dockerfile` multi-stage (build com Maven + imagem final com JRE 21, rodando como usuário não-root).
+Sobe API + PostgreSQL 16 com healthchecks:
+
+```bash
+cp .env.example .env   # preencha JWT_SECRET e YOUTUBE_API_KEY
+docker compose up --build
+```
+
+- API: `http://localhost:8080` • Health: `/actuator/health`
+- Swagger: `http://localhost:8080/swagger-ui.html`
+
+### Com Docker puro
 
 ```bash
 docker build -t aceleraflix .
@@ -296,7 +306,9 @@ docker run -p 8080:8080 \
   aceleraflix
 ```
 
-> Não há `docker-compose.yml` no projeto — o container espera um PostgreSQL já disponível e acessível via `DB_URL`.
+### CI/CD
+
+Workflow `CI` (`.github/workflows/ci.yml`): a cada push/PR em `main`/`develop` roda `./mvnw -B verify` contra um PostgreSQL de serviço. Em push, builda a imagem e publica em `ghcr.io/<owner>/<repo>:<branch|sha>` (e `:latest` na `main`).
 
 ## Testes
 

@@ -33,6 +33,19 @@ jwt:
   expiration-access: 900000
   expiration-refresh: 604800000
 
+youtube:
+  api:
+    key: ${YOUTUBE_API_KEY:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
 springdoc:
   api-docs:
     path: /v3/api-docs

@@ -1,14 +1,14 @@
-package vitortheof.com.br.aceleraflix.library.api;
+package vitortheof.com.br.aceleraflix.engagement.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vitortheof.com.br.aceleraflix.auth.infrastructure.security.UserAuth;
-import vitortheof.com.br.aceleraflix.library.application.PlaylistService;
-import vitortheof.com.br.aceleraflix.library.application.dto.response.PlaylistResponseDTO;
-import vitortheof.com.br.aceleraflix.library.application.mapper.PlaylistMapper;
-import vitortheof.com.br.aceleraflix.library.repository.PlaylistRepository;
+import vitortheof.com.br.aceleraflix.engagement.application.PlaylistService;
+import vitortheof.com.br.aceleraflix.engagement.application.dto.response.PlaylistResponseDTO;
+import vitortheof.com.br.aceleraflix.engagement.application.mapper.PlaylistMapper;
+import vitortheof.com.br.aceleraflix.engagement.infrastructure.PlaylistRepository;
 
 import java.util.List;
 import java.util.UUID;
