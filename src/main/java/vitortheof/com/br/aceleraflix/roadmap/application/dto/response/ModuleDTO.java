@@ -6,6 +6,7 @@ import java.util.UUID;
 public record ModuleDTO(
         UUID id,
         String title,
+        Integer orderIndex,
         List<TopicDTO> topics
 ) {
 }
