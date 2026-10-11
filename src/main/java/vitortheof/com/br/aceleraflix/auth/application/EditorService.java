@@ -22,6 +22,10 @@ public class EditorService {
     public void solicitarEdicao(UUID userId){
         Usuario usuario = buscarUser(userId);
 
+        if (usuario.getRole() == RoleUsuario.ADMIN) {
+            throw new SolicitationInvalidException("Administradores já têm permissão de edição e não podem solicitar o cargo de editor");
+        }
+
         if(usuario.getStatusEditor() == StatusEditor.PENDENTE){
             throw new SolicitationInvalidException("Você já tem uma solicitação pendente");
         }
@@ -50,7 +54,7 @@ public class EditorService {
         }
 
         usuario.setStatusEditor(StatusEditor.APROVADO);
-        usuario.setRole(RoleUsuario.EDITOR);
+        alterarRoleSeNaoForAdmin(usuario, RoleUsuario.EDITOR);
         usuarioRepository.save(usuario);
     }
 
@@ -71,8 +75,15 @@ public class EditorService {
             throw new SolicitationInvalidException("Usuário não é editor");
         }
         usuario.setStatusEditor(StatusEditor.REVOGADO);
-        usuario.setRole(RoleUsuario.USUARIO);
+        alterarRoleSeNaoForAdmin(usuario, RoleUsuario.USUARIO);
         usuarioRepository.save(usuario);
+    }
+
+    // O cargo de ADMIN nunca é rebaixado pelo fluxo de editor.
+    private void alterarRoleSeNaoForAdmin(Usuario usuario, RoleUsuario novoRole) {
+        if (usuario.getRole() != RoleUsuario.ADMIN) {
+            usuario.setRole(novoRole);
+        }
     }
 
     private Usuario buscarUser(UUID userId){
