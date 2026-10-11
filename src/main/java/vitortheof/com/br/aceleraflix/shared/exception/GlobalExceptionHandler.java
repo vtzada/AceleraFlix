@@ -3,6 +3,7 @@ package vitortheof.com.br.aceleraflix.shared.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -66,6 +67,11 @@ public class GlobalExceptionHandler {
             erros.put(erro.getField(), erro.getDefaultMessage());
         }
         return ResponseEntity.badRequest().body(erros);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErroResponse> handleCorpoInvalido(HttpMessageNotReadableException ex) {
+        return construirResposta(HttpStatus.BAD_REQUEST, "Corpo da requisição ausente ou inválido.");
     }
 
     @ExceptionHandler(CategoryAlreadyExistsException.class)

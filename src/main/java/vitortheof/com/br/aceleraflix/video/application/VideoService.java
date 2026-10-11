@@ -69,44 +69,44 @@ public class VideoService {
                 .tags(tags)
                 .build();
         videoRepository.save(video);
-        return videoMapper.toResponse(video);
+        return videoMapper.toResponse(video, criadoPor);
     }
 
     @Transactional(readOnly = true)
-    public Page<VideoResponse> findAll(Pageable pageable) {
+    public Page<VideoResponse> findAll(Pageable pageable, UUID usuarioId) {
         Page<Video> page = videoRepository.findAll(pageable);
-        List<VideoResponse> content = videoMapper.toResponseList(page.getContent());
+        List<VideoResponse> content = videoMapper.toResponseList(page.getContent(), usuarioId);
         return new PageImpl<>(content, pageable, page.getTotalElements());
     }
 
     @Transactional(readOnly = true)
-    public Page<VideoResponse> findByCategory(UUID categoriaId, Pageable pageable) {
+    public Page<VideoResponse> findByCategory(UUID categoriaId, Pageable pageable, UUID usuarioId) {
         Page<Video> page = videoRepository.findByCategoriaId(categoriaId, pageable);
-        List<VideoResponse> content = videoMapper.toResponseList(page.getContent());
+        List<VideoResponse> content = videoMapper.toResponseList(page.getContent(), usuarioId);
         return new PageImpl<>(content, pageable, page.getTotalElements());
     }
 
     @Transactional(readOnly = true)
-    public Page<VideoResponse> findByCreator(UUID criadoPor, Pageable pageable) {
+    public Page<VideoResponse> findByCreator(UUID criadoPor, Pageable pageable, UUID usuarioId) {
         Page<Video> page = videoRepository.findByCriadoPor(criadoPor, pageable);
-        List<VideoResponse> content = videoMapper.toResponseList(page.getContent());
+        List<VideoResponse> content = videoMapper.toResponseList(page.getContent(), usuarioId);
         return new PageImpl<>(content, pageable, page.getTotalElements());
     }
 
     @Transactional(readOnly = true)
-    public Page<VideoResponse> search(String q, Pageable pageable) {
+    public Page<VideoResponse> search(String q, Pageable pageable, UUID usuarioId) {
         Page<Video> page = videoRepository
                 .findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCaseOrTags_NomeContainingIgnoreCase(
                         q, q, q, pageable);
-        List<VideoResponse> content = videoMapper.toResponseList(page.getContent());
+        List<VideoResponse> content = videoMapper.toResponseList(page.getContent(), usuarioId);
         return new PageImpl<>(content, pageable, page.getTotalElements());
     }
 
     @Transactional(readOnly = true)
-    public VideoResponse findById(UUID id) {
+    public VideoResponse findById(UUID id, UUID usuarioId) {
         Video video = videoRepository.findById(id)
                 .orElseThrow(() -> new VideoNotFoundException(id));
-        return videoMapper.toResponse(video);
+        return videoMapper.toResponse(video, usuarioId);
     }
 
     @Transactional
@@ -132,7 +132,7 @@ public class VideoService {
         video.setTags(tags);
 
         videoRepository.save(video);
-        return videoMapper.toResponse(video);
+        return videoMapper.toResponse(video, usuarioId);
     }
 
     @Transactional

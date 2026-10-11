@@ -8,6 +8,8 @@ import vitortheof.com.br.aceleraflix.category.application.CategoriaLookupService
 import vitortheof.com.br.aceleraflix.category.application.dto.CategoriaDTO;
 import vitortheof.com.br.aceleraflix.profile.application.PerfilLookupService;
 import vitortheof.com.br.aceleraflix.profile.domain.Perfil;
+import vitortheof.com.br.aceleraflix.video.application.AvaliacaoService;
+import vitortheof.com.br.aceleraflix.video.application.dto.AvaliacaoResumoResponse;
 import vitortheof.com.br.aceleraflix.video.application.dto.CriadorDTO;
 import vitortheof.com.br.aceleraflix.video.application.dto.VideoResponse;
 import vitortheof.com.br.aceleraflix.video.domain.Tag;
@@ -28,8 +30,10 @@ public class VideoMapper {
     private final CategoriaLookupService categoriaLookupService;
     private final UserLookupService userLookupService;
     private final PerfilLookupService perfilLookupService;
+    private final AvaliacaoService avaliacaoService;
 
-    public VideoResponse toResponse(Video video) {
+    // usuarioId: usuário logado (null para anônimo), usado só para preencher notaUsuario.
+    public VideoResponse toResponse(Video video, UUID usuarioId) {
         CategoriaDTO categoria = video.getCategoriaId() != null
                 ? categoriaLookupService.findById(video.getCategoriaId())
                 : null;
@@ -40,10 +44,10 @@ public class VideoMapper {
                 .get(video.getCriadoPor());
         CriadorDTO criador = buildCriador(usuario, perfil);
 
-        return buildResponse(video, categoria, criador);
+        return buildResponse(video, categoria, criador, avaliacaoService.resumir(video.getId(), usuarioId));
     }
 
-    public List<VideoResponse> toResponseList(List<Video> videos) {
+    public List<VideoResponse> toResponseList(List<Video> videos, UUID usuarioId) {
         if (videos == null || videos.isEmpty()) {
             return List.of();
         }
@@ -61,6 +65,8 @@ public class VideoMapper {
         Map<UUID, CategoriaDTO> categoriasMap = categoriaLookupService.findAllById(categoriaIds);
         Map<UUID, UserDTO> usuariosMap = userLookupService.findAllById(criadorIds);
         Map<UUID, Perfil> perfisMap = perfilLookupService.findByUsuarioIds(criadorIds);
+        Map<UUID, AvaliacaoResumoResponse> avaliacoesMap = avaliacaoService.resumirPorVideos(
+                videos.stream().map(Video::getId).toList(), usuarioId);
 
         return videos.stream().map(video -> {
             CategoriaDTO categoria = video.getCategoriaId() != null
@@ -71,7 +77,10 @@ public class VideoMapper {
                     usuariosMap.get(video.getCriadoPor()),
                     perfisMap.get(video.getCriadoPor()));
 
-            return buildResponse(video, categoria, criador);
+            AvaliacaoResumoResponse avaliacoes = avaliacoesMap
+                    .getOrDefault(video.getId(), AvaliacaoResumoResponse.SEM_AVALIACOES);
+
+            return buildResponse(video, categoria, criador, avaliacoes);
         }).toList();
     }
 
@@ -86,7 +95,8 @@ public class VideoMapper {
                 perfil != null ? perfil.getAvatarUrl() : null);
     }
 
-    private VideoResponse buildResponse(Video video, CategoriaDTO categoria, CriadorDTO criador) {
+    private VideoResponse buildResponse(Video video, CategoriaDTO categoria, CriadorDTO criador,
+                                        AvaliacaoResumoResponse avaliacoes) {
         List<String> tags = video.getTags().stream()
                 .map(Tag::getNome)
                 .sorted()
@@ -103,7 +113,10 @@ public class VideoMapper {
                 criador,
                 video.getStatus(),
                 tags,
-                video.getCriadoEm()
+                video.getCriadoEm(),
+                avaliacoes.mediaAvaliacoes(),
+                avaliacoes.totalAvaliacoes(),
+                avaliacoes.notaUsuario()
         );
     }
 }
