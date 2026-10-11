@@ -53,3 +53,10 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     enabled: ${SPRINGDOC_ENABLED:true}
+
+rate-limit:
+  read-per-minute: ${RATE_LIMIT_READ_PER_MINUTE:360}
+  write-per-minute: ${RATE_LIMIT_WRITE_PER_MINUTE:120}
+  auth-per-minute: ${RATE_LIMIT_AUTH_PER_MINUTE:20}
+  refresh-per-minute: ${RATE_LIMIT_REFRESH_PER_MINUTE:60}
+  trust-forwarded-for: ${RATE_LIMIT_TRUST_FORWARDED_FOR:false}

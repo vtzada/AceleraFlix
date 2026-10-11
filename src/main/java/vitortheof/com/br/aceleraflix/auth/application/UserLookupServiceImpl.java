@@ -3,6 +3,7 @@ package vitortheof.com.br.aceleraflix.auth.application;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vitortheof.com.br.aceleraflix.auth.application.dto.UserDTO;
+import vitortheof.com.br.aceleraflix.auth.application.exception.UserNotFoundException;
 import vitortheof.com.br.aceleraflix.auth.application.mapper.UserMapper;
 import vitortheof.com.br.aceleraflix.auth.domain.StatusEditor;
 import vitortheof.com.br.aceleraflix.auth.domain.Usuario;
@@ -23,7 +24,7 @@ public class UserLookupServiceImpl implements UserLookupService {
     @Override
     public UserDTO findById(UUID userId) {
         Usuario usuario = usuarioRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         return userMapper.toDTO(usuario);
     }

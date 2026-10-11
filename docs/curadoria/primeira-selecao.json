@@ -1,0 +1,93 @@
+[
+  {
+    "titulo": "02 - Como Java Funciona",
+    "descricao": "Entenda como o código Java passa pela compilação, pelo bytecode e pela JVM. Aula de fundamentos da Maratona Java, com DevDojo. Idioma: português.",
+    "urlYoutube": "https://www.youtube.com/watch?v=JasmdiTyduI",
+    "categoriaId": "798e9eaf-1102-443b-9dfd-2a69ce9bca0b",
+    "tags": [
+      "java",
+      "jvm",
+      "fundamentos",
+      "iniciante",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "Curso Python #04 - Primeiros comandos em Python3",
+    "descricao": "Pratique os primeiros comandos em Python 3: saída de dados, entrada pelo teclado e variáveis. Aula do Curso em Vídeo com Gustavo Guanabara. Idioma: português.",
+    "urlYoutube": "https://www.youtube.com/watch?v=31llNGKWDdo",
+    "categoriaId": "8a31738f-f2fa-4b71-b6c0-534d3cf4bf84",
+    "tags": [
+      "python",
+      "python3",
+      "fundamentos",
+      "iniciante",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "CURSO DE TYPESCRIPT NA PRÁTICA - APRENDA TYPESCRIPT EM 1 HORA",
+    "descricao": "Introdução prática à tipagem e aos recursos básicos do TypeScript, com Matheus Battisti. Recomendado para quem já conhece JavaScript. Idioma: português.",
+    "urlYoutube": "https://www.youtube.com/watch?v=lCemyQeSCV8",
+    "categoriaId": "b9bea778-d309-4816-b094-81ea7dba0943",
+    "tags": [
+      "typescript",
+      "javascript",
+      "tipagem",
+      "iniciante",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "Docker Tutorial for Beginners [FULL COURSE in 3 Hours]",
+    "descricao": "Curso prático de Docker com TechWorld with Nana: imagens, containers, Dockerfile, Docker Compose e persistência de dados. Idioma: inglês.",
+    "urlYoutube": "https://www.youtube.com/watch?v=3c-iBn73dDE",
+    "categoriaId": "65810ec5-d6dd-4bab-8b51-772cee97baa4",
+    "tags": [
+      "docker",
+      "containers",
+      "docker-compose",
+      "devops",
+      "iniciante",
+      "ingles"
+    ]
+  },
+  {
+    "titulo": "Checklist do Programador Sênior: 10 itens para você ser um Programador MUITO acima da média ✅",
+    "descricao": "Filipe Deschamps apresenta dez pontos para refletir sobre evolução profissional, responsabilidade e maturidade no desenvolvimento de software. Idioma: português.",
+    "urlYoutube": "https://www.youtube.com/watch?v=12GFiyMuVmc",
+    "categoriaId": "ff6a78c1-c235-4a6d-ba03-087e75e7b868",
+    "tags": [
+      "carreira",
+      "senioridade",
+      "desenvolvimento-profissional",
+      "portugues"
+    ]
+  },
+  {
+    "titulo": "SQL Tutorial - Full Database Course for Beginners",
+    "descricao": "Curso de fundamentos de SQL no freeCodeCamp.org: tabelas, consultas, relacionamentos e operações em bancos relacionais. Exemplos com MySQL. Idioma: inglês.",
+    "urlYoutube": "https://www.youtube.com/watch?v=HXV3zeQKqGY",
+    "categoriaId": "af764e02-ad0b-4f05-b889-30bf82b974b3",
+    "tags": [
+      "sql",
+      "mysql",
+      "banco-de-dados",
+      "iniciante",
+      "ingles"
+    ]
+  },
+  {
+    "titulo": "React Tutorial for Beginners",
+    "descricao": "Introdução prática ao React com Programming with Mosh: componentes, propriedades, estado e eventos, em um projeto com TypeScript. Idioma: inglês.",
+    "urlYoutube": "https://www.youtube.com/watch?v=SqcY0GlETPk",
+    "categoriaId": "0d6d1ff2-6df0-4e45-a8c7-6f92bc1b873c",
+    "tags": [
+      "react",
+      "typescript",
+      "frontend",
+      "iniciante",
+      "ingles"
+    ]
+  }
+]

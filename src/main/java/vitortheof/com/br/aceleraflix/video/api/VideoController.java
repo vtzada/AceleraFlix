@@ -33,28 +33,35 @@ public class VideoController {
     public ResponseEntity<Page<VideoResponse>> listar(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) UUID criadoPor,
-            @PageableDefault(size = 20, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 20, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticationPrincipal UserAuth usuarioAutenticado) {
+
+        UUID usuarioId = usuarioIdOuNull(usuarioAutenticado);
 
         Page<VideoResponse> result;
         if (q != null && !q.isBlank()) {
-            result = videoService.search(q.trim(), pageable);
+            result = videoService.search(q.trim(), pageable, usuarioId);
         } else if (criadoPor != null) {
-            result = videoService.findByCreator(criadoPor, pageable);
+            result = videoService.findByCreator(criadoPor, pageable, usuarioId);
         } else {
-            result = videoService.findAll(pageable);
+            result = videoService.findAll(pageable, usuarioId);
         }
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VideoResponse> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(videoService.findById(id));
+    public ResponseEntity<VideoResponse> findById(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal UserAuth usuarioAutenticado) {
+        return ResponseEntity.ok(videoService.findById(id, usuarioIdOuNull(usuarioAutenticado)));
     }
     @GetMapping("/categoria/{categoriaId}")
     public ResponseEntity<Page<VideoResponse>> listarPorCategoria(
             @PathVariable UUID categoriaId,
-            @PageableDefault(size = 20, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(videoService.findByCategory(categoriaId, pageable));
+            @PageableDefault(size = 20, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticationPrincipal UserAuth usuarioAutenticado) {
+        return ResponseEntity.ok(
+                videoService.findByCategory(categoriaId, pageable, usuarioIdOuNull(usuarioAutenticado)));
     }
 
     @PostMapping
@@ -92,5 +99,10 @@ public class VideoController {
 
         videoService.delete(id, usuarioId, isAdmin);
         return ResponseEntity.noContent().build();
+    }
+
+    // Leitura é pública: sem sessão o principal vem null e a nota do usuário fica null.
+    private UUID usuarioIdOuNull(UserAuth usuarioAutenticado) {
+        return usuarioAutenticado != null ? usuarioAutenticado.getUsuario().getId() : null;
     }
 }

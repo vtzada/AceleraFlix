@@ -3,6 +3,7 @@ package vitortheof.com.br.aceleraflix.shared.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import vitortheof.com.br.aceleraflix.auth.application.exception.CredentialsInvalidException;
 import vitortheof.com.br.aceleraflix.auth.application.exception.EmailAlreadyExistsException;
 import vitortheof.com.br.aceleraflix.auth.application.exception.SolicitationInvalidException;
+import vitortheof.com.br.aceleraflix.auth.application.exception.UserNotFoundException;
 import vitortheof.com.br.aceleraflix.auth.infrastructure.security.TokenInvalidoException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryAlreadyExistsException;
 import vitortheof.com.br.aceleraflix.category.application.exception.CategoryNotFoundException;
@@ -17,6 +19,8 @@ import vitortheof.com.br.aceleraflix.category.application.exception.CategoryWith
 import vitortheof.com.br.aceleraflix.profile.application.exception.ProfileAlreadyExistsException;
 import vitortheof.com.br.aceleraflix.profile.application.exception.ProfileNotFoundException;
 import vitortheof.com.br.aceleraflix.profile.application.exception.UsernameAlreadyExistsException;
+import vitortheof.com.br.aceleraflix.roadmap.application.exceptions.RoadmapAlreadyExistsException;
+import vitortheof.com.br.aceleraflix.roadmap.application.exceptions.RoadmapNotFoundException;
 import vitortheof.com.br.aceleraflix.video.application.exception.CategoriaObrigatoriaException;
 import vitortheof.com.br.aceleraflix.video.application.exception.CategoryNonExistentException;
 import vitortheof.com.br.aceleraflix.video.application.exception.UrlInvalidException;
@@ -63,6 +67,11 @@ public class GlobalExceptionHandler {
             erros.put(erro.getField(), erro.getDefaultMessage());
         }
         return ResponseEntity.badRequest().body(erros);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErroResponse> handleCorpoInvalido(HttpMessageNotReadableException ex) {
+        return construirResposta(HttpStatus.BAD_REQUEST, "Corpo da requisição ausente ou inválido.");
     }
 
     @ExceptionHandler(CategoryAlreadyExistsException.class)
@@ -117,6 +126,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProfileNotFoundException.class)
     public ResponseEntity<ErroResponse> handlePerfilNaoEncontrado(ProfileNotFoundException ex) {
+        return construirResposta(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(RoadmapNotFoundException.class)
+    public ResponseEntity<ErroResponse> handleRoadmapNaoEncontrado(RoadmapNotFoundException ex) {
+        return construirResposta(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(RoadmapAlreadyExistsException.class)
+    public ResponseEntity<ErroResponse> handleRoadmapJaExiste(RoadmapAlreadyExistsException ex) {
+        return construirResposta(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErroResponse> handleUsuarioNaoEncontrado(UserNotFoundException ex) {
         return construirResposta(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 

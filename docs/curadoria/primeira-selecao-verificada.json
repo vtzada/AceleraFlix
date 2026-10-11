@@ -1,0 +1,90 @@
+{
+  "verificadoEm": "2026-10-10",
+  "fonte": "YouTube Data API v3",
+  "videos": [
+    {
+      "id": "abccdd15-ce28-4044-9904-fe389d841edc",
+      "categoria": "Java",
+      "youtubeId": "JasmdiTyduI",
+      "titulo": "02 - Como Java Funciona",
+      "canal": "DevDojo",
+      "duracao": "PT10M28S",
+      "visualizacoes": 107328,
+      "curtidas": 7527,
+      "urlYoutube": "https://www.youtube.com/watch?v=JasmdiTyduI",
+      "status": "APROVADO"
+    },
+    {
+      "id": "6dfb4031-136e-4c78-8d74-3d5ce185578f",
+      "categoria": "Python",
+      "youtubeId": "31llNGKWDdo",
+      "titulo": "Curso Python #04 - Primeiros comandos em Python3",
+      "canal": "Curso em Vídeo",
+      "duracao": "PT27M33S",
+      "visualizacoes": 5340458,
+      "curtidas": 265664,
+      "urlYoutube": "https://www.youtube.com/watch?v=31llNGKWDdo",
+      "status": "APROVADO"
+    },
+    {
+      "id": "5d5f1156-4461-4a0d-afc9-4b3e3def3db2",
+      "categoria": "TypeScript",
+      "youtubeId": "lCemyQeSCV8",
+      "titulo": "CURSO DE TYPESCRIPT NA PRÁTICA - APRENDA TYPESCRIPT EM 1 HORA",
+      "canal": "Matheus Battisti - Hora de Codar",
+      "duracao": "PT1H11M23S",
+      "visualizacoes": 115812,
+      "curtidas": 6224,
+      "urlYoutube": "https://www.youtube.com/watch?v=lCemyQeSCV8",
+      "status": "APROVADO"
+    },
+    {
+      "id": "7a565f99-8a40-49d4-9971-8cbd04fcff96",
+      "categoria": "DevOps",
+      "youtubeId": "3c-iBn73dDE",
+      "titulo": "Docker Tutorial for Beginners [FULL COURSE in 3 Hours]",
+      "canal": "TechWorld with Nana",
+      "duracao": "PT2H46M15S",
+      "visualizacoes": 6515607,
+      "curtidas": 105274,
+      "urlYoutube": "https://www.youtube.com/watch?v=3c-iBn73dDE",
+      "status": "APROVADO"
+    },
+    {
+      "id": "81b19be5-76d6-4aba-80de-90a9097691b3",
+      "categoria": "Carreira",
+      "youtubeId": "12GFiyMuVmc",
+      "titulo": "Checklist do Programador Sênior: 10 itens para você ser um Programador MUITO acima da média ✅",
+      "canal": "Filipe Deschamps",
+      "duracao": "PT13M3S",
+      "visualizacoes": 245051,
+      "curtidas": 22842,
+      "urlYoutube": "https://www.youtube.com/watch?v=12GFiyMuVmc",
+      "status": "APROVADO"
+    },
+    {
+      "id": "76214b3b-0b52-4c5d-858f-2614ceed2d72",
+      "categoria": "Banco de Dados",
+      "youtubeId": "HXV3zeQKqGY",
+      "titulo": "SQL Tutorial - Full Database Course for Beginners",
+      "canal": "freeCodeCamp.org",
+      "duracao": "PT4H20M39S",
+      "visualizacoes": 21071415,
+      "curtidas": 383855,
+      "urlYoutube": "https://www.youtube.com/watch?v=HXV3zeQKqGY",
+      "status": "APROVADO"
+    },
+    {
+      "id": "daaabc64-bb72-4296-acc3-18121025b850",
+      "categoria": "Frontend",
+      "youtubeId": "SqcY0GlETPk",
+      "titulo": "React Tutorial for Beginners",
+      "canal": "Programming with Mosh",
+      "duracao": "PT1H20M4S",
+      "visualizacoes": 6208552,
+      "curtidas": 101371,
+      "urlYoutube": "https://www.youtube.com/watch?v=SqcY0GlETPk",
+      "status": "APROVADO"
+    }
+  ]
+}
