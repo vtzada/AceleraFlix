@@ -18,5 +18,8 @@ public record VideoResponse(
         CriadorDTO criador,
         StatusVideo status,
         List<String> tags,
-        Instant criadoEm) {
+        Instant criadoEm,
+        Double mediaAvaliacoes,
+        long totalAvaliacoes,
+        Integer notaUsuario) {
 }
