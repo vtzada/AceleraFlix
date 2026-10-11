@@ -1,6 +1,7 @@
 package vitortheof.com.br.aceleraflix.video.application.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public record VideoRequest(
         String descricao,
         @NotBlank(message = "URL do youtube é obrigatório")
         String urlYoutube,
+        @NotNull(message = "Categoria é obrigatória")
         UUID categoriaId,
         List<String> tags
 ) {

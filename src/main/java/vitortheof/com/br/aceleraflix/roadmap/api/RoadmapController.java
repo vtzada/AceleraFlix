@@ -37,7 +37,7 @@ public class RoadmapController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<RoadmapResponseDTO> updateRoadmap(@PathVariable UUID id, @RequestBody RoadmapRequestDTO roadmapRequestDTO) {
+    public ResponseEntity<RoadmapResponseDTO> updateRoadmap(@PathVariable UUID id, @Valid @RequestBody RoadmapRequestDTO roadmapRequestDTO) {
         RoadmapResponseDTO response = roadmapService.updateRoadmap(id, roadmapRequestDTO);
         return ResponseEntity.ok(response);
     }

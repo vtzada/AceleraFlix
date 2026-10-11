@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface RoadmapRepository extends JpaRepository<Roadmap, UUID> {
 
     Optional<Roadmap> findBySlug(String slug);
+
+    boolean existsBySlugAndIdNot(String slug, UUID id);
 }

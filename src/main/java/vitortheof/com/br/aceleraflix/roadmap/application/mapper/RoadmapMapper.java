@@ -34,7 +34,7 @@ public class RoadmapMapper {
         List<TopicDTO> topics = (module.getTopics() == null) ? Collections.emptyList() :
                 module.getTopics().stream().map(this::toTopicDTO).toList();
 
-        return new ModuleDTO(module.getId(), module.getTitle(), topics);
+        return new ModuleDTO(module.getId(), module.getTitle(), module.getOrderIndex(), topics);
     }
 
     public TopicDTO toTopicDTO(RoadmapTopic topic) {
@@ -43,14 +43,14 @@ public class RoadmapMapper {
         List<ResourceDTO> resources = (topic.getResources() == null) ? Collections.emptyList() :
                 topic.getResources().stream().map(this::toResourceDTO).toList();
 
-        return new TopicDTO(topic.getId(), topic.getTitle(), resources);
+        return new TopicDTO(topic.getId(), topic.getTitle(), topic.getOrderIndex(), resources);
     }
 
     public ResourceDTO toResourceDTO(RoadmapResource resource) {
         if (resource == null) return null;
 
         return new ResourceDTO(
-                resource.getId(), resource.getTitle(), resource.getResourceType(),
+                resource.getId(), resource.getTitle(), resource.getOrderIndex(), resource.getResourceType(),
                 resource.getExternalUrl(), resource.getVideoId()
         );
     }

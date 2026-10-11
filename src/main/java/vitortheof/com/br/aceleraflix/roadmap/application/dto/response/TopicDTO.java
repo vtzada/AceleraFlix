@@ -6,6 +6,7 @@ import java.util.UUID;
 public record TopicDTO(
         UUID id,
         String title,
+        Integer orderIndex,
         List<ResourceDTO> resources
 ) {
 }

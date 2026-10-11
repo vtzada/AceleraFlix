@@ -47,6 +47,10 @@ public class RoadmapService {
     public RoadmapResponseDTO updateRoadmap(UUID id, RoadmapRequestDTO request) {
         Roadmap roadmap = roadmapRepository.findById(id)
                 .orElseThrow(() -> new RoadmapNotFoundException("Roadmap não encontrado"));
+
+        if (roadmapRepository.existsBySlugAndIdNot(request.slug(), id)) {
+            throw new RoadmapAlreadyExistsException("Já existe um roadmap com este slug " + request.slug());
+        }
         roadmap.setTitle(request.title());
         roadmap.setSlug(request.slug());
         roadmap.setDescription(request.description());
