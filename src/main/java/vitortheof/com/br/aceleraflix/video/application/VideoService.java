@@ -96,7 +96,7 @@ public class VideoService {
     @Transactional(readOnly = true)
     public Page<VideoResponse> search(String q, Pageable pageable, UUID usuarioId) {
         Page<Video> page = videoRepository
-                .findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCaseOrTags_NomeContainingIgnoreCase(
+                .findDistinctByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCaseOrTags_NomeContainingIgnoreCase(
                         q, q, q, pageable);
         List<VideoResponse> content = videoMapper.toResponseList(page.getContent(), usuarioId);
         return new PageImpl<>(content, pageable, page.getTotalElements());
