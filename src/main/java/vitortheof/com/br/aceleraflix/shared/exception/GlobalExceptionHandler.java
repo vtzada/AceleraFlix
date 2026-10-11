@@ -1,6 +1,8 @@
 package vitortheof.com.br.aceleraflix.shared.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -34,6 +36,9 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    // Nome que o Postgres dá ao UNIQUE de roadmaps.slug (V11).
+    private static final String ROADMAP_SLUG_UNIQUE = "roadmaps_slug_key";
 
     @ExceptionHandler(TokenInvalidoException.class)
     public ResponseEntity<ErroResponse> handleTokenInvalido(TokenInvalidoException ex) {
@@ -139,6 +144,17 @@ public class GlobalExceptionHandler {
         return construirResposta(HttpStatus.CONFLICT, ex.getMessage());
     }
 
+    // A consulta prévia do RoadmapService não cobre duas gravações simultâneas do mesmo slug: nesse caso quem
+    // barra é a restrição do banco (no flush ou só no commit). Apenas essa restrição vira 409; qualquer outra
+    // violação de integridade continua sendo erro interno.
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErroResponse> handleViolacaoDeIntegridade(DataIntegrityViolationException ex) {
+        if (violaRestricao(ex, ROADMAP_SLUG_UNIQUE)) {
+            return construirResposta(HttpStatus.CONFLICT, "Já existe um roadmap com este slug");
+        }
+        return handleErrosNaoTratados(ex);
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErroResponse> handleUsuarioNaoEncontrado(UserNotFoundException ex) {
         return construirResposta(HttpStatus.NOT_FOUND, ex.getMessage());
@@ -148,6 +164,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErroResponse> handleErrosNaoTratados(Exception ex) {
         log.error("Erro interno não tratado capturado pelo fallback: ", ex);
         return construirResposta(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno no servidor. Tente novamente mais tarde.");
+    }
+
+    private boolean violaRestricao(Throwable ex, String restricao) {
+        for (Throwable causa = ex; causa != null; causa = causa.getCause()) {
+            if (causa instanceof ConstraintViolationException violacao
+                    && restricao.equalsIgnoreCase(violacao.getConstraintName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private ResponseEntity<ErroResponse> construirResposta(HttpStatus status, String mensagem) {

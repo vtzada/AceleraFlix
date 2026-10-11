@@ -11,15 +11,30 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import vitortheof.com.br.aceleraflix.auth.domain.RoleUsuario;
 import vitortheof.com.br.aceleraflix.auth.domain.Usuario;
 import vitortheof.com.br.aceleraflix.auth.infrastructure.UsuarioRepository;
 import vitortheof.com.br.aceleraflix.auth.infrastructure.security.JwtProvider;
+import vitortheof.com.br.aceleraflix.roadmap.domain.Roadmap;
+import vitortheof.com.br.aceleraflix.roadmap.infrastructure.RoadmapRepository;
+
+import javax.sql.DataSource;
 
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,6 +51,9 @@ class RoadmapIntegrationTest {
     @Autowired JwtProvider jwt;
     @Autowired UsuarioRepository usuarios;
     @Autowired EntityManager entityManager;
+    @Autowired RoadmapRepository roadmaps;
+    @Autowired PlatformTransactionManager transactionManager;
+    @Autowired DataSource dataSource;
 
     MockMvc mvc;
     String sufixo;
@@ -124,6 +142,107 @@ class RoadmapIntegrationTest {
         atualizar("/roadmap/" + outroId, "{\"title\": \"Outro editado\", \"slug\": \"outro-" + sufixo + "\"}")
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Outro editado"));
+    }
+
+    // Sem transação de teste: o conflito só aparece no banco, entre transações independentes. O slug é gravado
+    // por uma transação ainda aberta, então a consulta prévia do serviço não o enxerga e a requisição fica
+    // presa na restrição de unicidade até o commit da outra — que a faz falhar por violação no banco.
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    void slugGravadoPorTransacaoConcorrenteRetorna409NoCreateENoUpdate() throws Exception {
+        String disputadoNoCreate = "disputado-create-" + sufixo;
+        String disputadoNoUpdate = "disputado-update-" + sufixo;
+        String proprio = "proprio-" + sufixo;
+        try {
+            String corpoCreate = "{\"title\": \"Novo\", \"slug\": \"" + disputadoNoCreate + "\"}";
+            assertEquals(409, statusComSlugDisputado(disputadoNoCreate, () -> mvc
+                    .perform(comoAdmin(post("/roadmap")).contentType(MediaType.APPLICATION_JSON).content(corpoCreate))
+                    .andExpect(jsonPath("$.status").value(409))
+                    .andExpect(jsonPath("$.mensagem").isString())
+                    .andReturn().getResponse().getStatus()));
+
+            String roadmapId = criarRoadmap("Proprio", proprio);
+            String corpoUpdate = "{\"title\": \"Proprio\", \"slug\": \"" + disputadoNoUpdate + "\"}";
+            assertEquals(409, statusComSlugDisputado(disputadoNoUpdate, () -> atualizar("/roadmap/" + roadmapId, corpoUpdate)
+                    .andExpect(jsonPath("$.status").value(409))
+                    .andExpect(jsonPath("$.mensagem").isString())
+                    .andReturn().getResponse().getStatus()));
+
+            // quem perdeu a disputa não gravou nada: cada slug continua com um único dono
+            assertEquals("Concorrente", roadmaps.findBySlug(disputadoNoCreate).orElseThrow().getTitle());
+            assertEquals("Concorrente", roadmaps.findBySlug(disputadoNoUpdate).orElseThrow().getTitle());
+            assertEquals("Proprio", roadmaps.findBySlug(proprio).orElseThrow().getTitle());
+        } finally {
+            for (String slug : new String[] { disputadoNoCreate, disputadoNoUpdate, proprio }) {
+                roadmaps.findBySlug(slug).ifPresent(roadmaps::delete);
+            }
+            usuarios.delete(admin);
+        }
+    }
+
+    // A tradução para 409 é só da restrição do slug: um recurso gravado num tópico apagado por outra
+    // transação viola a FK de roadmap_resources e continua sendo erro interno, não "slug duplicado".
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    void outraViolacaoDeIntegridadeNaoViraConflitoDeSlug() throws Exception {
+        String slug = "integridade-" + sufixo;
+        try {
+            String roadmapId = criarRoadmap("Integridade", slug);
+            String moduloId = id(criar("/roadmaps/" + roadmapId + "/modules", "{\"title\": \"Modulo\", \"orderIndex\": 1}"));
+            String topicoId = id(criar("/modules/" + moduloId + "/topics", "{\"title\": \"Topico\", \"orderIndex\": 1}"));
+            String corpo = "{\"title\": \"Recurso\", \"type\": \"ARTICLE\", \"orderIndex\": 1}";
+
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            try {
+                Future<Integer> resposta = new TransactionTemplate(transactionManager).execute(tx -> {
+                    new JdbcTemplate(dataSource).update("DELETE FROM roadmap_topics WHERE id = ?", UUID.fromString(topicoId));
+                    Future<Integer> emAndamento = executor.submit(() -> mvc
+                            .perform(comoAdmin(post("/topics/" + topicoId + "/resources"))
+                                    .contentType(MediaType.APPLICATION_JSON).content(corpo))
+                            .andReturn().getResponse().getStatus());
+                    aguardarRequisicaoPresaNoBanco();
+                    return emAndamento;
+                });
+                assertEquals(500, resposta.get(30, TimeUnit.SECONDS));
+            } finally {
+                executor.shutdownNow();
+            }
+        } finally {
+            roadmaps.findBySlug(slug).ifPresent(roadmaps::delete);
+            usuarios.delete(admin);
+        }
+    }
+
+    private int statusComSlugDisputado(String slug, Callable<Integer> requisicao) throws Exception {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        try {
+            Future<Integer> resposta = new TransactionTemplate(transactionManager).execute(tx -> {
+                roadmaps.saveAndFlush(Roadmap.builder().title("Concorrente").slug(slug).build());
+                Future<Integer> emAndamento = executor.submit(requisicao);
+                aguardarRequisicaoPresaNoBanco();
+                return emAndamento;
+            });
+            return resposta.get(30, TimeUnit.SECONDS);
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    // Garante que o teste exercitou a violação no banco, e não só a consulta prévia do serviço.
+    private void aguardarRequisicaoPresaNoBanco() {
+        JdbcTemplate jdbc = new JdbcTemplate(dataSource);
+        for (int tentativa = 0; tentativa < 200; tentativa++) {
+            if (jdbc.queryForObject("SELECT count(*) FROM pg_locks WHERE NOT granted", Integer.class) > 0) {
+                return;
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        fail("A requisição concorrente não chegou a esperar pela restrição de unicidade do slug");
     }
 
     @Test void roadmapComTituloOuSlugInvalidoRetorna400() throws Exception {
