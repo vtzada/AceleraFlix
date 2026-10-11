@@ -2,6 +2,13 @@
 -- Antes de criar o índice único, funde as duplicadas existentes: fica a de menor id
 -- e os vídeos das demais são movidos para ela.
 
+-- Bloqueia escritas nas duas tabelas até o commit da migração (o Flyway roda este script numa única
+-- transação). Sem isso, uma instância antiga da aplicação poderia confirmar um vídeo numa duplicada
+-- entre a cópia e o DELETE (e ele sumiria no cascade), ou criar uma nova duplicada antes do índice.
+-- SHARE ROW EXCLUSIVE barra INSERT/UPDATE/DELETE concorrentes e ainda permite leituras; as escritas
+-- ficam em espera enquanto a migração roda e seguem normalmente depois do commit.
+LOCK TABLE playlist, playlist_videos IN SHARE ROW EXCLUSIVE MODE;
+
 CREATE TEMPORARY TABLE playlist_duplicada AS
 SELECT id AS duplicada_id, manter_id
 FROM (SELECT id,
