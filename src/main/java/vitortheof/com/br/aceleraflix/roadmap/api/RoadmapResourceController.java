@@ -1,5 +1,6 @@
 package vitortheof.com.br.aceleraflix.roadmap.api;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class RoadmapResourceController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResourceDTO> createResource(
             @PathVariable UUID topicId,
-            @RequestBody ResourceRequestDTO request) {
+            @Valid @RequestBody ResourceRequestDTO request) {
 
         ResourceDTO response = resourceService.createResource(topicId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -31,7 +32,7 @@ public class RoadmapResourceController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResourceDTO> updateResource(
             @PathVariable UUID resourceId,
-            @RequestBody ResourceRequestDTO request) {
+            @Valid @RequestBody ResourceRequestDTO request) {
 
         return ResponseEntity.ok(resourceService.updateResource(resourceId, request));
     }

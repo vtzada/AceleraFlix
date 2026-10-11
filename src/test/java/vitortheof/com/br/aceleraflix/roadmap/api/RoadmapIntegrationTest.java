@@ -110,6 +110,86 @@ class RoadmapIntegrationTest {
                 .andExpect(status().isOk()).andExpect(jsonPath("$.orderIndex").value(6));
     }
 
+    @Test void trocarSlugParaUmJaExistenteRetorna409() throws Exception {
+        String existente = "existente-" + sufixo;
+        criarRoadmap("Existente", existente);
+        String outroId = criarRoadmap("Outro", "outro-" + sufixo);
+
+        atualizar("/roadmap/" + outroId, "{\"title\": \"Outro\", \"slug\": \"" + existente + "\"}")
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.mensagem").isString());
+
+        // manter o próprio slug continua permitido
+        atualizar("/roadmap/" + outroId, "{\"title\": \"Outro editado\", \"slug\": \"outro-" + sufixo + "\"}")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Outro editado"));
+    }
+
+    @Test void roadmapComTituloOuSlugInvalidoRetorna400() throws Exception {
+        String roadmapId = criarRoadmap("Trilha " + sufixo, "trilha-" + sufixo);
+        String longo = "a".repeat(256);
+        String[][] corposECampos = {
+                { "{\"slug\": \"ok-" + sufixo + "\"}", "title" },
+                { "{\"title\": \"  \", \"slug\": \"ok-" + sufixo + "\"}", "title" },
+                { "{\"title\": \"" + longo + "\", \"slug\": \"ok-" + sufixo + "\"}", "title" },
+                { "{\"title\": \"Ok\"}", "slug" },
+                { "{\"title\": \"Ok\", \"slug\": \"\"}", "slug" },
+                { "{\"title\": \"Ok\", \"slug\": \"Com Espaco\"}", "slug" },
+                { "{\"title\": \"Ok\", \"slug\": \"com_underline\"}", "slug" },
+                { "{\"title\": \"Ok\", \"slug\": \"" + longo + "\"}", "slug" },
+        };
+        for (String[] caso : corposECampos) {
+            mvc.perform(comoAdmin(post("/roadmap")).contentType(MediaType.APPLICATION_JSON).content(caso[0]))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$." + caso[1]).isString());
+            atualizar("/roadmap/" + roadmapId, caso[0])
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$." + caso[1]).isString());
+        }
+    }
+
+    @Test void moduloTopicoERecursoInvalidosRetornam400() throws Exception {
+        String roadmapId = criarRoadmap("Trilha " + sufixo, "trilha-" + sufixo);
+        String moduloId = id(criar("/roadmaps/" + roadmapId + "/modules", "{\"title\": \"Modulo\", \"orderIndex\": 1}"));
+        String topicoId = id(criar("/modules/" + moduloId + "/topics", "{\"title\": \"Topico\", \"orderIndex\": 1}"));
+        String recursoId = id(criar("/topics/" + topicoId + "/resources",
+                "{\"title\": \"Recurso\", \"type\": \"ARTICLE\", \"orderIndex\": 1}"));
+
+        String semTitulo = "{\"orderIndex\": 1}";
+        String semOrdem = "{\"title\": \"Titulo\"}";
+        String recursoSemTipo = "{\"title\": \"Recurso\", \"orderIndex\": 1}";
+
+        String[] criacoes = {
+                "/roadmaps/" + roadmapId + "/modules", "/modules/" + moduloId + "/topics", "/topics/" + topicoId + "/resources" };
+        for (String url : criacoes) {
+            mvc.perform(comoAdmin(post(url)).contentType(MediaType.APPLICATION_JSON).content(semTitulo))
+                    .andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").isString());
+            mvc.perform(comoAdmin(post(url)).contentType(MediaType.APPLICATION_JSON).content(semOrdem))
+                    .andExpect(status().isBadRequest()).andExpect(jsonPath("$.orderIndex").isString());
+        }
+        String[] atualizacoes = { "/modules/" + moduloId, "/topics/" + topicoId, "/resources/" + recursoId };
+        for (String url : atualizacoes) {
+            atualizar(url, semTitulo).andExpect(status().isBadRequest()).andExpect(jsonPath("$.title").isString());
+            atualizar(url, semOrdem).andExpect(status().isBadRequest()).andExpect(jsonPath("$.orderIndex").isString());
+        }
+        mvc.perform(comoAdmin(post("/topics/" + topicoId + "/resources"))
+                        .contentType(MediaType.APPLICATION_JSON).content(recursoSemTipo))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.type").isString());
+        atualizar("/resources/" + recursoId, recursoSemTipo)
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.type").isString());
+    }
+
+    @Test void criarVideoSemCategoriaRetorna400() throws Exception {
+        for (String corpo : new String[] {
+                "{\"titulo\": \"Video\", \"urlYoutube\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\"}",
+                "{\"titulo\": \"Video\", \"urlYoutube\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\", \"categoriaId\": null}" }) {
+            mvc.perform(comoAdmin(post("/videos")).contentType(MediaType.APPLICATION_JSON).content(corpo))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.categoriaId").isString());
+        }
+    }
+
     private String criarRoadmap(String titulo, String slug) throws Exception {
         return id(criar("/roadmap", "{\"title\": \"" + titulo + "\", \"slug\": \"" + slug + "\", \"description\": \"desc\"}"));
     }

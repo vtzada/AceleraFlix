@@ -1,5 +1,6 @@
 package vitortheof.com.br.aceleraflix.roadmap.api;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class RoadmapTopicController {
     @PostMapping("/modules/{moduleId}/topics")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TopicDTO> createTopic(@PathVariable UUID moduleId,
-                                                @RequestBody TopicRequestDTO request) {
+                                                @Valid @RequestBody TopicRequestDTO request) {
         TopicDTO response = topicService.createTopic(moduleId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -29,7 +30,7 @@ public class RoadmapTopicController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TopicDTO> updateTopic(
             @PathVariable UUID topicId,
-            @RequestBody TopicRequestDTO request) {
+            @Valid @RequestBody TopicRequestDTO request) {
 
         return ResponseEntity.ok(topicService.updateTopic(topicId, request));
     }
